@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "SXhcV0PKp7c=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\inoce\\OneDrive\\Documents\\Dev\\PersonalProjects\\ChessCheaters\\server\\server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\inoce\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.8\\microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",
+    "C:\\Users\\inoce\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
