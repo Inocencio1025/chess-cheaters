@@ -1,12 +1,9 @@
-
-import './App.css'
-import ChessBoard from './components/ChessBoard'
+import HomeScreen from './screens/HomeScreen'
 
 function App() {
-
   return (
     <>
-      <ChessBoard />
+      <HomeScreen />
     </>
   )
 }

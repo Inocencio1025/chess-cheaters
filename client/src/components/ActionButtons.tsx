@@ -1,17 +1,18 @@
-import { powers } from "../powers/PowerManager";
-import type { PowerType } from "../powers/PowerManager";
+import { cheats } from "../cheats/CheatManager";
+import type { CheatType } from "../cheats/CheatManager";
 
 type Action =
   | "move"
-  | PowerType;
+  | CheatType;
 
 
 type Props = {
   updateTargets: (action: Action) => void;
-  canAfford: (power: PowerType) => boolean;
+  canAfford: (cheat: CheatType) => boolean;
   magnetMode: "pull" | "push";
   setMagnetMode: (mode: "pull" | "push") => void;
   dashActive: boolean;
+  availableCheats: CheatType[];
 };
 
 
@@ -20,7 +21,8 @@ function ActionButtons({
   canAfford,
   magnetMode,
   setMagnetMode,
-  dashActive
+  dashActive,
+  availableCheats
 }: Props) {
 
   return (
@@ -34,19 +36,21 @@ function ActionButtons({
         Move
       </button>
 
-      {powers.map((power) => (
-        <button
-          key={power.id}
-          disabled={!canAfford(power.id) || dashActive}
-          onClick={() => {
-            updateTargets(power.id);
-          }}
-        >
-          {power.name} ({power.cost})
-        </button>
-      ))}
+      {cheats
+        .filter(cheat => availableCheats.includes(cheat.id))
+        .map((cheat) => (
+          <button
+            key={cheat.id}
+            disabled={!canAfford(cheat.id) || dashActive}
+            onClick={() => {
+              updateTargets(cheat.id);
+            }}
+          >
+            {cheat.name} ({cheat.cost})
+          </button>
+        ))}
 
-      {powers.some(power => power.id === "magnet") && (
+      {availableCheats.includes("magnet") && (
         <div>
           <button
             onClick={() => setMagnetMode("pull")}

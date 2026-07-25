@@ -1,8 +1,8 @@
 import type { Color } from "./Piece";
 import type { GameState } from "./GameState";
 import { getGameStatus } from "./GameLogic";
-import { updateFreezeTurns } from "../powers/FreezeLogic";
-import { removePhase } from "../powers/PhasedLogic";
+import { updateFreezeTurns } from "../cheats/FreezeLogic";
+import { removePhase } from "../cheats/PhasedLogic";
 
 export function getNextTurn(currentTurn: Color): Color {
   return currentTurn === "white"
@@ -46,7 +46,7 @@ export function endTurn(
       status === "checkmate" ||
       status === "stalemate",
     royalDecreeActive: false,
-    activePower: {
+    activeCheat: {
       dashActive: false,
       dashSecondMove: false,
       phaseActive: false

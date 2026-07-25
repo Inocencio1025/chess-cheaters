@@ -17,11 +17,11 @@ export interface GameState {
   currentTurn: Color;
   moveHistory: Move[];
   status: GameStatus;
-  whiteMomentum: number;
-  blackMomentum: number;
+  whiteTempo: number;
+  blackTempo: number;
   royalDecreeActive: boolean;
   gameOver: boolean;
-  activePower: ActivePowerState;
+  activeCheat: ActiveCheatState;
   message: string;
 }
 
@@ -32,11 +32,11 @@ export function createGameState(): GameState {
     currentTurn: "white",
     moveHistory: [],
     status: "playing",
-    whiteMomentum: 0,
-    blackMomentum: 0,
+    whiteTempo: 0,
+    blackTempo: 0,
     royalDecreeActive: false,
     gameOver: false,
-    activePower: {
+    activeCheat: {
       dashActive: false,
       dashSecondMove: false,
       phaseActive: false
@@ -52,11 +52,11 @@ export function createTestGameState(): GameState {
     currentTurn: "white",
     moveHistory: [],
     status: "playing",
-    whiteMomentum: 100,
-    blackMomentum: 100,
+    whiteTempo: 100,
+    blackTempo: 100,
     royalDecreeActive: false,
     gameOver: false,
-    activePower: {
+    activeCheat: {
       dashActive: false,
       dashSecondMove: false,
       phaseActive: false
@@ -65,7 +65,7 @@ export function createTestGameState(): GameState {
   };
 }
 
-export type ActivePowerState = {
+export type ActiveCheatState = {
   dashActive: boolean;
   dashSecondMove: boolean;
   phaseActive: boolean;

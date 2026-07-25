@@ -28,15 +28,15 @@ export function makeMove(
       move
     ],
 
-    whiteMomentum:
+    whiteTempo:
       captured && gameState.currentTurn === "white"
-        ? gameState.whiteMomentum + 1
-        : gameState.whiteMomentum,
+        ? gameState.whiteTempo + 1
+        : gameState.whiteTempo,
 
-    blackMomentum:
+    blackTempo:
       captured && gameState.currentTurn === "black"
-        ? gameState.blackMomentum + 1
-        : gameState.blackMomentum
+        ? gameState.blackTempo + 1
+        : gameState.blackTempo
   };
 
   if (!endPlayerTurn) {

@@ -2,8 +2,8 @@ type Props = {
   currentTurn: "white" | "black";
   status: string;
   currentAction: string;
-  whiteMomentum: number;
-  blackMomentum: number;
+  whiteTempo: number;
+  blackTempo: number;
   autoFlip: boolean;
   setAutoFlip: React.Dispatch<React.SetStateAction<boolean>>
   message: string;
@@ -15,8 +15,8 @@ function GameInfo({
   currentTurn,
   status,
   currentAction,
-  whiteMomentum,
-  blackMomentum,
+  whiteTempo: whiteTempo,
+  blackTempo: blackTempo,
   autoFlip,
   setAutoFlip,
   message
@@ -50,11 +50,11 @@ function GameInfo({
 
 
       <p>
-        White Momentum: {whiteMomentum}
+        White Tempo: {whiteTempo}
       </p>
 
       <p>
-        Black Momentum: {blackMomentum}
+        Black Tempo: {blackTempo}
       </p>
 
       <p>

@@ -2,14 +2,13 @@ import type { GameState } from "../chess/GameState";
 import type { Piece } from "../chess/Piece";
 import { getGunTargets } from "./GunLogic";
 import { getFreezeTargets } from "./FreezeLogic";
-import { useGun, useFreeze, useBomb, useRoyalDecree, useDash, useMagnet, usePhase, useForcePush, useRock } from "./PowerHandlers";
+import { useGun, useFreeze, useBomb, useRoyalDecree, useDash, useMagnet, usePhase, useForcePush, useRock } from "./CheatHandlers";
 import { getMagnetTargets } from "./MagnetLogic";
 import { isKingInCheck } from "../chess/AttackLogic";
 import { endTurn } from "../chess/TurnLogic";
-import { applyForcePush } from "./ForcePushLogic";
 import { getLegalMoves } from "../chess/MoveLogic";
 
-export const powers = [
+export const cheats = [
   {
     id: "gun",
     name: "Gun",
@@ -58,11 +57,11 @@ export const powers = [
 
 ] as const;
 
-export type PowerType = typeof powers[number]["id"];
+export type CheatType = typeof cheats[number]["id"];
 
 
-export function executePower(
-  power: PowerType,
+export function executeCheat(
+  cheat: CheatType,
   gameState: GameState,
   targetSquare: string,
   casterSquare?: string,
@@ -70,15 +69,15 @@ export function executePower(
 ): GameState {
 
 
-  let stateAfterCost = spendMomentum(
+  let stateAfterCost = spendTempo(
     gameState,
-    getPowerCost(power)
+    getCheatCost(cheat)
   );
 
 
   let newState: GameState = gameState;
 
-  switch (power) {
+  switch (cheat) {
 
     case "gun":
       newState = useGun(
@@ -155,21 +154,21 @@ export function executePower(
   ) {
     return {
       ...gameState,
-      message: "Cannot use power: king would be in check"
+      message: "Cannot use cheat: king would be in check"
     }
   }
 
 
   console.log(
     "before:",
-    gameState.whiteMomentum,
+    gameState.whiteTempo,
     "after cost:",
-    stateAfterCost.whiteMomentum
+    stateAfterCost.whiteTempo
   );
 
   if (
-    power === "phase" ||
-    power === "royal-decree"
+    cheat === "phase" ||
+    cheat === "royal-decree"
   ) {
     return newState;
   }
@@ -181,20 +180,20 @@ export function executePower(
   );
 }
 
-export function preparePower(
-  power: PowerType,
+export function prepareCheat(
+  cheat: CheatType,
   gameState: GameState,
   square: string
 ): GameState {
 
-  const cost = getPowerCost(power);
+  const cost = getCheatCost(cheat);
 
-  let newState = spendMomentum(
+  let newState = spendTempo(
     gameState,
     cost
   );
 
-  switch (power) {
+  switch (cheat) {
     case "dash":
       return useDash(
         newState
@@ -205,14 +204,14 @@ export function preparePower(
   }
 }
 
-export function getPowerTargets(
-  power: PowerType,
+export function getCheatTargets(
+  cheat: CheatType,
   piece: Piece,
   square: string,
   gameState: GameState
 ): string[] {
 
-  switch (power) {
+  switch (cheat) {
 
     case "gun":
       return getGunTargets(
@@ -267,11 +266,11 @@ export function getPowerTargets(
   return [];
 }
 
-export function getPowerCost(power: PowerType): number {
-  return powers.find(p => p.id === power)!.cost;
+export function getCheatCost(cheat: CheatType): number {
+  return cheats.find(p => p.id === cheat)!.cost;
 }
 
-function spendMomentum(
+function spendTempo(
   gameState: GameState,
   cost: number
 ): GameState {
@@ -279,12 +278,12 @@ function spendMomentum(
   if (gameState.currentTurn === "white") {
     return {
       ...gameState,
-      whiteMomentum: gameState.whiteMomentum - cost
+      whiteTempo: gameState.whiteTempo - cost
     };
   }
 
   return {
     ...gameState,
-    blackMomentum: gameState.blackMomentum - cost
+    blackTempo: gameState.blackTempo - cost
   };
 }

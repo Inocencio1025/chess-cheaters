@@ -79,8 +79,8 @@ export function useDash(
 
   return {
     ...gameState,
-    activePower: {
-      ...gameState.activePower,
+    activeCheat: {
+      ...gameState.activeCheat,
       dashActive: true,
       dashSecondMove: false
     }
@@ -149,8 +149,8 @@ export function usePhase(
   return {
     ...gameState,
     board: newBoard,
-    activePower: {
-      ...gameState.activePower,
+    activeCheat: {
+      ...gameState.activeCheat,
       phaseActive: true
     }
   };

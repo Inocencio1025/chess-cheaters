@@ -1,12 +1,11 @@
 import type { GameState } from "./GameState";
 import { getLegalMoves } from "./MoveLogic";
-import { getPowerCost, executePower, getPowerTargets, preparePower, type PowerType } from "../powers/PowerManager";
+import { getCheatCost, executeCheat, getCheatTargets, prepareCheat, type CheatType as CheatType } from "../cheats/CheatManager";
 import { makeMove } from "./GameActions";
 import { endTurn } from "./TurnLogic";
 import { files, ranks } from "./BoardConstants";
-import { usePhase } from "../powers/PowerHandlers";
 
-export type ActionType = "move" | PowerType;
+export type ActionType = "move" | CheatType;
 
 export type SelectionState = {
   selectedSquare: string;
@@ -16,13 +15,13 @@ export type SelectionState = {
 
 
 
-export function handlePowerClick(
+export function handleCheatClick(
   gameState: GameState,
   selection: SelectionState,
   squareName: string,
   magnetMode: "pull" | "push"
 ): GameState | null {
-  const newState = executeSelectedPower(
+  const newState = executeSelectedCheat(
     gameState,
     selection.currentAction,
     selection.selectedSquare,
@@ -43,15 +42,15 @@ export function resetSelection(): SelectionState {
 
 export function canAfford(
   gameState: GameState,
-  power: PowerType
+  cheat: CheatType
 ): boolean {
 
-  const momentum =
+  const tempo =
     gameState.currentTurn === "white"
-      ? gameState.whiteMomentum
-      : gameState.blackMomentum;
+      ? gameState.whiteTempo
+      : gameState.blackTempo;
 
-  return momentum >= getPowerCost(power);
+  return tempo >= getCheatCost(cheat);
 }
 
 export function updateTargets(
@@ -105,7 +104,7 @@ export function updateTargets(
 
   if (action === "dash") {
 
-    if (gameState.activePower.dashActive) {
+    if (gameState.activeCheat.dashActive) {
 
       const selectedPiece = gameState.board[selectedSquare];
 
@@ -132,7 +131,7 @@ export function updateTargets(
       };
     }
 
-    const newState = preparePower(
+    const newState = prepareCheat(
       "dash",
       gameState,
       ""
@@ -154,7 +153,7 @@ export function updateTargets(
 
 
   if (action === "royal-decree") {
-    const newState = executePower(
+    const newState = executeCheat(
       "royal-decree",
       gameState,
       ""
@@ -185,7 +184,7 @@ export function updateTargets(
     }
 
     return {
-      gameState: executePower(
+      gameState: executeCheat(
         "force-push",
         gameState,
         "",
@@ -216,7 +215,7 @@ export function updateTargets(
   return {
     gameState,
     currentAction: action,
-    validMoves: getPowerTargets(
+    validMoves: getCheatTargets(
       action,
       selectedPiece,
       selectedSquare,
@@ -258,7 +257,7 @@ export function selectPiece(
   return null;
 }
 
-export function executeSelectedPower(
+export function executeSelectedCheat(
   gameState: GameState,
   action: ActionType,
   selectedSquare: string,
@@ -269,7 +268,7 @@ export function executeSelectedPower(
     return null;
   }
   if (action === "rock") {
-    return executePower(
+    return executeCheat(
       "rock",
       gameState,
       targetSquare
@@ -277,7 +276,7 @@ export function executeSelectedPower(
   }
 
   if (action === "freeze") {
-    return executePower(
+    return executeCheat(
       "freeze",
       gameState,
       targetSquare
@@ -286,7 +285,7 @@ export function executeSelectedPower(
 
   if (action === "phase") {
 
-    const phasedState = executePower(
+    const phasedState = executeCheat(
       "phase",
       gameState,
       selectedSquare
@@ -300,7 +299,7 @@ export function executeSelectedPower(
   }
 
 
-  return executePower(
+  return executeCheat(
     action,
     gameState,
     targetSquare,
@@ -328,7 +327,7 @@ export function applyPhaseBeforeMove(
   square: string
 ): GameState {
 
-  if (!gameState.activePower.phaseActive) {
+  if (!gameState.activeCheat.phaseActive) {
     return gameState;
   }
 
@@ -350,12 +349,12 @@ export function handleDashSecondMove(
   squareName: string
 ) {
   if (
-    !gameState.activePower.dashActive
+    !gameState.activeCheat.dashActive
   ) {
     return null;
   }
 
-  if (gameState.activePower.dashSecondMove) {
+  if (gameState.activeCheat.dashSecondMove) {
     return {
       finished: true as const,
       state: endTurn(
@@ -368,8 +367,8 @@ export function handleDashSecondMove(
 
   const dashState = {
     ...newState,
-    activePower: {
-      ...newState.activePower,
+    activeCheat: {
+      ...newState.activeCheat,
       dashSecondMove: true
     }
   };
@@ -396,7 +395,7 @@ export function handleDashSecondMove(
       state: endTurn(
         {
           ...dashState,
-          activePower: {
+          activeCheat: {
             dashActive: false,
             dashSecondMove: false,
             phaseActive: false
@@ -420,12 +419,12 @@ export function finishMove(
   gameState: GameState
 ): GameState {
 
-  console.log("finishMove", gameState.activePower);
+  console.log("finishMove", gameState.activeCheat);
 
   return endTurn(
     {
       ...gameState,
-      activePower: {
+      activeCheat: {
         dashActive: false,
         dashSecondMove: false,
         phaseActive: false

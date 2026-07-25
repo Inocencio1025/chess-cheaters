@@ -3,7 +3,7 @@ import { useState } from "react";
 import { createGameState, createTestGameState } from "../chess/GameState";
 import type { GameState } from "../chess/GameState";
 import { files, ranks } from "../chess/BoardConstants";
-import { type PowerType } from "../powers/PowerManager";
+import { type CheatType } from "../cheats/CheatManager";
 import PieceImage from "./PieceImage";
 import ActionButtons from "./ActionButtons";
 import GameInfo from "./GameInfo";
@@ -16,17 +16,21 @@ import {
   moveSelectedPiece,
   resetSelection,
   updateTargets,
-  handlePowerClick
+  handleCheatClick
 } from "../chess/GameController";
 
-function ChessBoard() {
+type Props = {
+  availableCheats: CheatType[];
+};
+
+function ChessBoard({ availableCheats }: Props) {
   const [autoFlip, setAutoFlip] = useState(false);
   const [magnetMode, setMagnetMode] = useState<"pull" | "push">("pull");
   const [message, setMessage] = useState("");
   const [selection, setSelection] = useState({
     selectedSquare: "",
     validMoves: [] as string[],
-    currentAction: "move" as "move" | PowerType
+    currentAction: "move" as "move" | CheatType
   });
   const [gameState, setGameState] = useState<GameState>(
     //createGameState()
@@ -43,7 +47,7 @@ function ChessBoard() {
 
         console.log(selection.currentAction, squareName);
 
-        const newState = handlePowerClick(
+        const newState = handleCheatClick(
           gameState,
           selection,
           squareName,
@@ -117,7 +121,7 @@ function ChessBoard() {
 
     if (result) {
 
-      if (gameState.activePower.dashSecondMove) {
+      if (gameState.activeCheat.dashSecondMove) {
         return;
       }
 
@@ -136,7 +140,7 @@ function ChessBoard() {
     setSelection(resetSelection());
   }
 
-  function handleUpdateTargets(action: "move" | PowerType) {
+  function handleUpdateTargets(action: "move" | CheatType) {
     const result = updateTargets(
       action,
       gameState,
@@ -178,7 +182,7 @@ function ChessBoard() {
                     ${selection.validMoves.includes(squareName) ? "valid-move" : ""}
                     ${(piece?.freezeTurns ?? 0) > 0 ? "frozen-square" : ""}
                     ${piece?.hasBomb ? "bomb-square" : ""}
-                    ${gameState.activePower.dashActive && selection.selectedSquare === squareName ? "dash-square" : ""}
+                    ${gameState.activeCheat.dashActive && selection.selectedSquare === squareName ? "dash-square" : ""}
                     ${gameState.terrain[squareName] === "rock" ? "rock-square" : ""}
                     `}
                     key={squareName}
@@ -203,8 +207,8 @@ function ChessBoard() {
           currentTurn={gameState.currentTurn}
           status={gameState.status}
           currentAction={selection.currentAction}
-          whiteMomentum={gameState.whiteMomentum}
-          blackMomentum={gameState.blackMomentum}
+          whiteTempo={gameState.whiteTempo}
+          blackTempo={gameState.blackTempo}
           autoFlip={autoFlip}
           setAutoFlip={setAutoFlip}
           message={message}
@@ -214,10 +218,11 @@ function ChessBoard() {
 
         <ActionButtons
           updateTargets={handleUpdateTargets}
-          canAfford={(power) => canAfford(gameState, power)}
+          canAfford={(cheat) => canAfford(gameState, cheat)}
           magnetMode={magnetMode}
           setMagnetMode={setMagnetMode}
-          dashActive={gameState.activePower.dashActive}
+          dashActive={gameState.activeCheat.dashActive}
+          availableCheats={availableCheats}
         />
 
       </div>
