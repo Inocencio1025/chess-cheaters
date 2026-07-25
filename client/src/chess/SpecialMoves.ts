@@ -37,6 +37,18 @@ export function handleCastling(
     newBoard["A1"] = null;
   }
 
+  // black kingside
+  if (to === "G8") {
+    newBoard["F8"] = newBoard["H8"];
+    newBoard["H8"] = null;
+  }
+
+  // black queenside
+  if (to === "C8") {
+    newBoard["D8"] = newBoard["A8"];
+    newBoard["A8"] = null;
+  }
+
   return newBoard;
 }
 
@@ -69,13 +81,14 @@ export function handleEnPassant(
 export function getCastleMoves(
   piece: Piece,
   board: Board,
+  terrain: Record<string, "rock" | null>
 ): string[] {
 
   const moves: string[] = [];
 
   /*
   console.log("king moved?", piece.hasMoved);
-  console.log("king check?", isKingInCheck(piece.color, board, moveHistory));
+  console.log("king check?", isKingInCheck(piece.color, board, terrain));
   console.log(board);
   */
   
@@ -83,7 +96,7 @@ export function getCastleMoves(
     return moves;
   }
 
-  if (isKingInCheck(piece.color, board)) {
+  if (isKingInCheck(piece.color, board, terrain)) {
     return moves;
   }
 
@@ -95,8 +108,8 @@ export function getCastleMoves(
       !board["H1"].hasMoved &&
       !board["F1"] &&
       !board["G1"] &&
-      !isSquareAttacked("F1", piece.color, board) &&
-      !isSquareAttacked("G1", piece.color, board)
+      !isSquareAttacked("F1", piece.color, board, terrain) &&
+      !isSquareAttacked("G1", piece.color, board, terrain)
     ) {
       moves.push("G1");
     }
@@ -108,8 +121,8 @@ export function getCastleMoves(
       !board["B1"] &&
       !board["C1"] &&
       !board["D1"] &&
-      !isSquareAttacked("C1", piece.color, board) &&
-      !isSquareAttacked("D1", piece.color, board)
+      !isSquareAttacked("C1", piece.color, board, terrain) &&
+      !isSquareAttacked("D1", piece.color, board, terrain)
     ) {
       moves.push("C1");
     }
@@ -122,8 +135,8 @@ export function getCastleMoves(
       !board["H8"].hasMoved &&
       !board["F8"] &&
       !board["G8"] &&
-      !isSquareAttacked("F8", piece.color, board) &&
-      !isSquareAttacked("G8", piece.color, board)
+      !isSquareAttacked("F8", piece.color, board, terrain) &&
+      !isSquareAttacked("G8", piece.color, board, terrain)
     ) {
       moves.push("G8");
     }
@@ -135,8 +148,8 @@ export function getCastleMoves(
       !board["B8"] &&
       !board["C8"] &&
       !board["D8"] &&
-      !isSquareAttacked("C8", piece.color, board) &&
-      !isSquareAttacked("D8", piece.color, board)
+      !isSquareAttacked("C8", piece.color, board, terrain) &&
+      !isSquareAttacked("D8", piece.color, board, terrain)
     ) {
       moves.push("C8");
     }

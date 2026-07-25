@@ -6,7 +6,8 @@ import { notationToPosition } from "./Position";
 function getAttackSquares(
   piece: Piece,
   square: string,
-  board: Board
+  board: Board,
+  terrain: Record<string, "rock" | null>
 ): string[] {
 
   const position = notationToPosition(square);
@@ -17,19 +18,19 @@ function getAttackSquares(
       return getPawnAttackSquares(piece, position);
 
     case "king":
-      return getValidKingMoves(piece, position, board, false);
+      return getValidKingMoves(piece, position, board, terrain, false);
 
     case "rook":
-      return getValidRookMoves(piece, position, board);
+      return getValidRookMoves(piece, position, board, terrain);
 
     case "bishop":
-      return getValidBishopMoves(piece, position, board);
+      return getValidBishopMoves(piece, position, board, terrain);
 
     case "queen":
-      return getValidQueenMoves(piece, position, board);
+      return getValidQueenMoves(piece, position, board, terrain);
 
     case "knight":
-      return getValidKnightMoves(piece, position, board);
+      return getValidKnightMoves(piece, position, board, terrain);
 
     default:
       return [];
@@ -54,7 +55,8 @@ function findKing(color: "white" | "black", board: Board): string | null {
 
 export function isKingInCheck(
   color: "white" | "black",
-  board: Board
+  board: Board,
+  terrain: Record<string, "rock" | null>
 ): boolean {
   const kingSquare = findKing(color, board);
 
@@ -69,7 +71,7 @@ export function isKingInCheck(
       continue;
     }
 
-    const attacks = getAttackSquares(piece, square, board);
+    const attacks = getAttackSquares(piece, square, board, terrain);
 
     if (attacks.includes(kingSquare)) {
       return true;
@@ -82,7 +84,8 @@ export function isKingInCheck(
 export function isSquareAttacked(
   square: string,
   color: "white" | "black",
-  board: Board
+  board: Board,
+  terrain: Record<string, "rock" | null>
 ): boolean {
 
   for (const position in board) {
@@ -92,7 +95,7 @@ export function isSquareAttacked(
       continue;
     }
 
-    const attacks = getAttackSquares(piece, position, board);
+    const attacks = getAttackSquares(piece, position, board, terrain);
 
     if (attacks.includes(square)) {
       return true;

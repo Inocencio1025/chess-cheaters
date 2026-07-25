@@ -3,17 +3,21 @@ import type { Board } from "./Board";
 import type { GameStatus } from "./GameState";
 import type { Move } from "./Move";
 import { playerHasLegalMoves } from "./MoveLogic";
-import {  handleCastling,  handleEnPassant} from "./SpecialMoves";
+import { handleCastling, handleEnPassant } from "./SpecialMoves";
 
 
 export function getGameStatus(
   color: "white" | "black",
   board: Board,
-  moveHistory: Move[]
+  terrain: Record<string, "rock" | null>,
+  moveHistory: Move[],
+  royalDecreeActive: boolean,
 ): GameStatus {
 
-  const inCheck = isKingInCheck(color, board);
-  const hasMoves = playerHasLegalMoves(color, board, moveHistory);
+  const inCheck = isKingInCheck(color, board, terrain);
+  const hasMoves = playerHasLegalMoves(
+    color, board, moveHistory, royalDecreeActive, terrain
+  );
 
   if (inCheck && !hasMoves) {
     return "checkmate";
@@ -31,16 +35,22 @@ export function getGameStatus(
 }
 export function movePiece(
   board: Board,
+  terrain: Record<string, "rock" | null>,
   from: string,
   to: string,
-): { board: Board; move: Move } {
+): { board: Board; move: Move; terrain: Record<string, "rock" | null> } {
 
   let newBoard = { ...board };
+  let newTerrain = { ...terrain };
 
   const piece = board[from];
 
   if (!piece) {
     throw new Error("No piece at source square");
+  }
+
+  if (newTerrain[to] === "rock") {
+    delete newTerrain[to];
   }
 
   const move: Move = {
@@ -53,6 +63,18 @@ export function movePiece(
       piece.type === "pawn" &&
       Math.abs(Number(from[1]) - Number(to[1])) === 2
   };
+
+  if (board[to] && (board[to]?.hasBomb || piece.hasBomb)) {
+
+    newBoard[from] = null;
+    newBoard[to] = null;
+
+    return {
+      board: newBoard,
+      move,
+      terrain: newTerrain
+    };
+  }
 
   newBoard[to] = {
     ...piece,
@@ -80,7 +102,8 @@ export function movePiece(
 
   return {
     board: newBoard,
-    move
+    move,
+    terrain: newTerrain
   };
 }
 

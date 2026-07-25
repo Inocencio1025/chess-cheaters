@@ -8,6 +8,7 @@ export function getValidPawnMoves(
   piece: Piece,
   position: Position,
   board: Board,
+  terrain: Record<string, "rock" | null>,
   moveHistory: Move[]
 ): string[] {
   const moves: string[] = [];
@@ -22,16 +23,22 @@ export function getValidPawnMoves(
     rank: rank + direction
   });
 
+  // one square move
   if (!board[oneForward]) {
     moves.push(oneForward);
 
+    // two square first move
     if (!piece.hasMoved) {
+
       const twoForward = positionToNotation({
         file,
         rank: rank + (2 * direction)
       });
 
-      if (!board[twoForward]) {
+      if (
+        !board[twoForward] &&
+        !terrain[oneForward]
+      ) {
         moves.push(twoForward);
       }
     }
@@ -117,12 +124,14 @@ export function getPawnAttackSquares(
 export function getValidRookMoves(
   piece: Piece,
   position: Position,
-  board: Board
+  board: Board,
+  terrain: Record<string, "rock" | null>
 ): string[] {
   return getSlidingMoves(
     piece,
     position,
     board,
+    terrain,
     [
       [1, 0],  // right
       [-1, 0], // left
@@ -136,7 +145,8 @@ export function getValidRookMoves(
 export function getValidKnightMoves(
   piece: Piece,
   position: Position,
-  board: Board
+  board: Board,
+  terrain: Record<string, "rock" | null>
 ): string[] {
   const knightOffsets = [
     [1, 2],
@@ -149,26 +159,28 @@ export function getValidKnightMoves(
     [-1, 2]
   ];
 
-  return getOffsetMoves(piece, position, board, knightOffsets);
+  return getOffsetMoves(piece, position, board, terrain, knightOffsets);
 }
 
 
 export function getValidBishopMoves(
   piece: Piece,
   position: Position,
-  board: Board
-): string[] {  
+  board: Board,
+  terrain: Record<string, "rock" | null>
+): string[] {
 
   return getSlidingMoves(
     piece,
     position,
     board,
+    terrain,
     [
       [1, 1],   // up-right
       [-1, 1],  // up-left
       [1, -1],  // down-right
       [-1, -1]  // down-left
-    ]
+    ],
   );
 }
 
@@ -176,13 +188,15 @@ export function getValidBishopMoves(
 export function getValidQueenMoves(
   piece: Piece,
   position: Position,
-  board: Board
+  board: Board,
+  terrain: Record<string, "rock" | null>
 ): string[] {
-  
+
   return getSlidingMoves(
     piece,
     position,
     board,
+    terrain,
     [
       [1, 0], // right
       [-1, 0], // left
@@ -201,6 +215,7 @@ export function getValidKingMoves(
   piece: Piece,
   position: Position,
   board: Board,
+  terrain: Record<string, "rock" | null>,
   includeCastling = true
 ): string[] {
   const kingOffsets = [
@@ -214,20 +229,22 @@ export function getValidKingMoves(
     [-1, -1]  // down-left
   ];
 
-  const moves = getOffsetMoves(piece, position, board, kingOffsets);
+  const moves = getOffsetMoves(piece, position, board, terrain, kingOffsets);
 
   if (includeCastling) {
     //const castleMoves = getCastleMoves(piece, board);
     //console.log("Castle moves:", castleMoves);
-    moves.push(...getCastleMoves(piece, board));
+    moves.push(...getCastleMoves(piece, board, terrain));
   }
 
   return moves;
 }
+
 function getSlidingMoves(
   piece: Piece,
   position: Position,
   board: Board,
+  terrain: Record<string, "rock" | null>,
   directions: number[][]
 ): string[] {
   const moves: string[] = [];
@@ -244,10 +261,33 @@ function getSlidingMoves(
     ) {
       const square = positionToNotation({ file, rank });
 
+      if (terrain[square] === "rock") {
+
+        if (piece.isPhased) {
+          moves.push(square);
+          file += fileDirection;
+          rank += rankDirection;
+          continue;
+        }
+
+        moves.push(square);
+        break;
+      }
+
       if (board[square]) {
+
+        // Phased pieces pass through occupied squares
+        if (piece.isPhased) {
+          file += fileDirection;
+          rank += rankDirection;
+          continue;
+        }
+
+
         if (board[square].color !== piece.color) {
           moves.push(square);
         }
+
         break;
       }
 
@@ -265,6 +305,7 @@ function getOffsetMoves(
   piece: Piece,
   position: Position,
   board: Board,
+  terrain: Record<string, "rock" | null>,
   offsets: number[][]
 ): string[] {
   const moves: string[] = [];
@@ -286,6 +327,11 @@ function getOffsetMoves(
     }
 
     const square = positionToNotation(newPosition);
+
+    if (terrain[square] === "rock") {
+      moves.push(square);
+      continue;
+    }
     const pieceAtSquare = board[square];
 
     if (!pieceAtSquare) {
@@ -299,4 +345,26 @@ function getOffsetMoves(
   }
 
   return moves;
+}
+
+export function getRoyalDecreeMoves(
+  piece: Piece,
+  position: Position,
+  board: Board,
+  terrain: Record<string, "rock" | null>
+): string[] {
+
+  return getValidQueenMoves(
+    piece,
+    position,
+    board,
+    terrain
+  ).filter(square => {
+    const target = board[square];
+
+    return !(
+      target &&
+      target.type === "king"
+    );
+  });
 }

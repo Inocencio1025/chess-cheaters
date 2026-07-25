@@ -1,9 +1,9 @@
 import type { Piece } from "./Piece";
 import type { Board } from "./Board";
-import { notationToPosition, positionToNotation, type Position } from "./Position";
+import { notationToPosition, } from "./Position";
 import { movePiece } from "./GameLogic";
 import type { Move } from "./Move";
-import { getValidBishopMoves, getValidKingMoves, getValidKnightMoves, getValidPawnMoves, getValidQueenMoves, getValidRookMoves } from "./PieceMoves";
+import { getRoyalDecreeMoves, getValidBishopMoves, getValidKingMoves, getValidKnightMoves, getValidPawnMoves, getValidQueenMoves, getValidRookMoves } from "./PieceMoves";
 import { isKingInCheck } from "./AttackLogic";
 
 
@@ -11,56 +11,114 @@ export function getLegalMoves(
   piece: Piece,
   square: string,
   board: Board,
-  moveHistory: Move[]
+  terrain: Record<string, "rock" | null>,
+  moveHistory: Move[],
+  royalDecreeActive: boolean,
+  cannotCapture = false
 ): string[] {
 
   const pseudoMoves = getPseudoLegalMoves(
-    piece, 
-    square, 
+    piece,
+    square,
     board,
-    moveHistory);
+    terrain,
+    moveHistory,
+    royalDecreeActive,
+    cannotCapture
+  );
 
-  return pseudoMoves.filter(move => {
-    const newBoard = movePiece(board, square, move);
 
-    const illegal = isKingInCheck(piece.color, newBoard.board);
+  const filteredMoves = cannotCapture
+  ? pseudoMoves.filter(move => !board[move])
+  : pseudoMoves;
 
-    /*
-    if (illegal) {
-        console.log(`${piece.type} ${square}->${move} removed`);
-    }
-    */
+  return filteredMoves.filter(move => {
+    const newBoard = movePiece(
+      board, 
+      terrain, 
+      square, 
+      move);
+
+    const illegal = isKingInCheck(
+      piece.color,
+      newBoard.board,
+      newBoard.terrain
+    );
 
     return !illegal;
-});
+  });
 }
 
 export function getPseudoLegalMoves(
   piece: Piece,
-  notation: string,
+  square: string,
   board: Board,
-  moveHistory: Move[]
+  terrain: Record<string, "rock" | null>,
+  moveHistory: Move[],
+  royalDecreeActive: boolean,
+  cannotCapture = false
 ): string[] {
-  const position = notationToPosition(notation);
+
+  const position = notationToPosition(square);
 
   switch (piece.type) {
     case "pawn":
-      return getValidPawnMoves(piece, position, board, moveHistory);
+      return getValidPawnMoves(
+        piece,
+        position,
+        board,
+        terrain,
+        moveHistory
+      );
 
     case "rook":
-      return getValidRookMoves(piece, position, board);
+      return getValidRookMoves(
+        piece,
+        position,
+        board,
+        terrain
+      );
 
     case "knight":
-      return getValidKnightMoves(piece, position, board);
+      return getValidKnightMoves(
+        piece,
+        position,
+        board,
+        terrain
+      );
 
     case "bishop":
-      return getValidBishopMoves(piece, position, board);
+      return getValidBishopMoves(
+        piece,
+        position,
+        board,
+        terrain
+      );
 
     case "queen":
-      return getValidQueenMoves(piece, position, board);
+      return getValidQueenMoves(
+        piece,
+        position,
+        board,
+        terrain
+      );
 
     case "king":
-      return getValidKingMoves(piece, position, board);
+      if (royalDecreeActive) {
+        return getRoyalDecreeMoves(
+          piece,
+          position,
+          board,
+          terrain
+        );
+      }
+
+      return getValidKingMoves(
+        piece,
+        position,
+        board,
+        terrain
+      );
 
     default:
       return [];
@@ -69,19 +127,29 @@ export function getPseudoLegalMoves(
 
 export function playerHasLegalMoves(
   color: "white" | "black",
-  board: Board, 
-  moveHistory: Move[]
-): boolean{
-    for (const square in board) {
-      const piece = board[square];
+  board: Board,
+  moveHistory: Move[],
+  royalDecreeActive: boolean,
+  terrain: Record<string, "rock" | null>
+): boolean {
+  for (const square in board) {
+    const piece = board[square];
 
-      if (piece?.color === color) {
-          const moves = getLegalMoves(piece, square, board, moveHistory);
+    if (piece?.color === color) {
+      const moves = getLegalMoves(
+        piece,
+        square,
+        board,
+        terrain,
+        moveHistory,
+        royalDecreeActive
+      );
 
-          if (moves.length > 0) {
-              return true;
-          }
+      if (moves.length > 0) {
+        return true;
       }
+    }
   }
+
   return false;
 }

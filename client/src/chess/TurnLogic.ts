@@ -1,0 +1,55 @@
+import type { Color } from "./Piece";
+import type { GameState } from "./GameState";
+import { getGameStatus } from "./GameLogic";
+import { updateFreezeTurns } from "../powers/FreezeLogic";
+import { removePhase } from "../powers/PhasedLogic";
+
+export function getNextTurn(currentTurn: Color): Color {
+  return currentTurn === "white"
+    ? "black"
+    : "white";
+}
+
+export function endTurn(
+  gameState: GameState,
+  board: GameState["board"],
+  history = gameState.moveHistory
+): GameState {
+
+  const nextTurn = getNextTurn(
+    gameState.currentTurn
+  );
+
+  let updatedBoard = updateFreezeTurns(
+    board
+  );
+
+  updatedBoard = removePhase(
+    updatedBoard
+  );
+
+  const status = getGameStatus(
+    nextTurn,
+    updatedBoard,
+    gameState.terrain,
+    history,
+    gameState.royalDecreeActive
+  );
+
+
+  return {
+    ...gameState,
+    board: updatedBoard,
+    currentTurn: nextTurn,
+    status,
+    gameOver:
+      status === "checkmate" ||
+      status === "stalemate",
+    royalDecreeActive: false,
+    activePower: {
+      dashActive: false,
+      dashSecondMove: false,
+      phaseActive: false
+    }
+  };
+}
