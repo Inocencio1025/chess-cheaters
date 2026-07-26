@@ -1,0 +1,87 @@
+.action-panel {
+  width: min(95vw, 700px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.action-panel h3 {
+  color: white;
+  margin: 0;
+}
+
+
+.action-buttons {
+  display: grid;
+
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 10px;
+
+  width: 100%;
+}
+
+
+.action-card {
+  min-height: 60px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #2a2d3f;
+
+  color: white;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  transition:
+    transform .15s ease,
+    background .15s ease;
+}
+
+
+.action-card:hover:not(:disabled) {
+  transform: translateY(-3px);
+  background: #34304f;
+}
+
+
+.action-card span {
+  color: #c4c4d4;
+  font-size: .85rem;
+}
+
+
+.action-card:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+
+.magnet-controls {
+  display: flex;
+  gap: 10px;
+}
+
+
+.magnet-controls button {
+  padding: 8px 20px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #8b5cf6;
+
+  color: white;
+
+  cursor: pointer;
+}
+

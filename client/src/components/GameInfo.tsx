@@ -1,3 +1,5 @@
+import "./GameInfo.css";
+
 type Props = {
   currentTurn: "white" | "black";
   status: string;
@@ -25,7 +27,7 @@ function GameInfo({
   return (
     <div className="game-info">
 
-      <div className="selected-square">
+      <div className="game-status">
 
         <p>
           {currentTurn}'s turn
@@ -49,16 +51,18 @@ function GameInfo({
       </button>
 
 
-      <p>
-        White Tempo: {whiteTempo}
-      </p>
+      <div className="tempo-display">
+        <p>
+          ⚪ {whiteTempo}
+        </p>
 
-      <p>
-        Black Tempo: {blackTempo}
-      </p>
+        <p>
+          ⚫ {blackTempo}
+        </p>
+      </div>
 
-      <p>
-        Message: {message}
+      <p className="game-message">
+        {message}
       </p>
 
     </div>

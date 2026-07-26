@@ -1,21 +1,33 @@
-import { useState } from "react";
-import CheatSelectScreen from "./CheatSelectScreen";
+import "./HomeScreen.css";
 
-function HomeScreen() {
-  const [started, setStarted] = useState(false);
+type Props = {
+  onCreateMatch: () => void;
+};
 
-  if (started) {
-    return <CheatSelectScreen />;
-  }
+function HomeScreen({
+  onCreateMatch
+}: Props) {
 
   return (
-    <div>
-      <h1>Chess Cheaters</h1>
-      <p>Chess with cheats</p>
+    <div className="home-screen">
+      <div className="home-card">
 
-      <button onClick={() => setStarted(true)}>
-        Create Match
-      </button>
+        <h1>Chess Cheaters</h1>
+
+        <p className="tagline">
+          Classic chess.
+          <br />
+          Breaking the rules encouraged.
+        </p>
+
+        <button
+          className="primary-button"
+          onClick={onCreateMatch}
+        >
+          Create Match
+        </button>
+
+      </div>
     </div>
   );
 }

@@ -1,0 +1,177 @@
+.cheat-screen {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: #1b1d2a;
+}
+
+.cheat-container {
+  width: 90%;
+  max-width: 800px;
+
+  text-align: center;
+}
+
+.cheat-container h1 {
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.cheat-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 1rem;
+
+  margin-bottom: 2rem;
+}
+
+.cheat-icon {
+  font-size: 3rem;
+
+  margin-bottom: 10px;
+}
+
+.cheat-card {
+  background: #2a2d3f;
+  border: 2px solid transparent;
+  border-radius: 16px;
+
+  color: white;
+
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    background .15s ease;
+}
+
+.cheat-cost {
+  color: #a78bfa;
+
+  font-weight: bold;
+
+  margin: 5px;
+}
+
+.cheat-card:hover {
+  transform: translateY(-4px);
+}
+
+.cheat-card.selected {
+  border-color: #8b5cf6;
+  background: #34304f;
+}
+
+.cheat-card h2 {
+  margin: 0 0 .5rem;
+}
+
+.cheat-card p {
+  color: #c4c4d4;
+}
+
+.cheat-container > p {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.primary-button {
+  width: 100%;
+
+  padding: 1rem;
+
+  border: none;
+  border-radius: 14px;
+
+  background: #8b5cf6;
+  color: white;
+
+  font-size: 1.1rem;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.primary-button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 600px) {
+  .cheat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cheat-description-panel {
+  margin: 1rem auto;
+
+  padding: 1.5rem;
+
+  max-width: 400px;
+
+  background: #2a2d3f;
+
+  border-radius: 16px;
+
+  color: white;
+
+  animation: fadeIn .2s ease;
+}
+
+
+.cheat-description-panel .description-icon {
+  font-size: 3rem;
+}
+
+
+.cheat-description-panel h2 {
+  margin: .5rem 0;
+}
+
+
+.cheat-description-panel p {
+  color: #c4c4d4;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cheat-description-panel {
+  min-height: 150px;
+}
+
+.cheat-top {
+  width: 90%;
+  max-width: 800px;
+
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  background: #1b1d2a;
+
+  padding-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+  .cheat-top {
+    position: sticky;
+    top: 0;
+  }
+}

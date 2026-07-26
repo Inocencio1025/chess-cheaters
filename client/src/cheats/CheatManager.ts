@@ -12,49 +12,66 @@ export const cheats = [
   {
     id: "gun",
     name: "Gun",
-    cost: 2
-  },
-  {
-    id: "freeze",
-    name: "Freeze",
-    cost: 3
+    icon: "🔫",
+    cost: 2,
+    description: "Attack from a distance without leaving your square."
   },
   {
     id: "bomb",
     name: "Bomb",
-    cost: 3
+    icon: "💣",
+    cost: 3,
+    description: "Attach a bomb to a piece. Any contact with another piece destroys both."
   },
   {
-    id: "phase",
-    name: "Phase",
-    cost: 3
-  },
-  {
-    id: "magnet",
-    name: "Magnet",
-    cost: 3
-  },
-  {
-    id: "royal-decree",
-    name: "Royal Decree",
-    cost: 4
+    id: "freeze",
+    name: "Freeze",
+    icon: "❄️",
+    cost: 3,
+    description: "Freeze an enemy piece, preventing it from moving temporarily."
   },
   {
     id: "dash",
     name: "Dash",
-    cost: 4
+    icon: "⚡",
+    cost: 4,
+    description: "Move a piece twice in one turn, but the second move cannot capture."
+  },
+  {
+    id: "phase",
+    name: "Phase",
+    icon: "👻",
+    cost: 3,
+    description: "Move through pieces and obstacles, but cannot capture while phased."
+  },
+  {
+    id: "magnet",
+    name: "Magnet",
+    icon: "🧲",
+    cost: 3,
+    description: "Push or pull pieces in a chosen direction."
   },
   {
     id: "force-push",
     name: "Force Push",
-    cost: 4
+    icon: "💨",
+    cost: 4,
+    description: "Repel nearby pieces away from your king with a powerful force."
   },
   {
     id: "rock",
     name: "Rock",
-    cost: 4
+    icon: "🪨",
+    cost: 4,
+    description: "Place an obstacle on the board that blocks movement."
+  },
+  {
+    id: "royal-decree",
+    name: "Royal Decree",
+    icon: "👑",
+    cost: 4,
+    description: "For one turn, your king gains the movement of a queen."
   }
-
 ] as const;
 
 export type CheatType = typeof cheats[number]["id"];

@@ -5,12 +5,19 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
+
+  background: #1b1d2a;
 }
 
 .chess-board {
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
+
+  border-radius: 12px;
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.4);
 }
 
 .rank {
@@ -18,31 +25,30 @@
 }
 
 .square {
-  width: 80px;
-  height: 80px;
-  border: 1px solid black;
+  width: min(12.5vw, 80px);
+  aspect-ratio: 1;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  font-size: 64px;
+  font-size: min(10vw, 64px);
 }
 
 .light {
-  background-color: beige;
+  background-color: #d8d8e0;
 }
 
 .dark {
-  background-color: dimgray;
+  background-color: #454866;
 }
 
 .selected {
-  box-shadow: inset 0 0 0 4px lightblue;
+  box-shadow: inset 0 0 0 5px #8b5cf6;
 }
 
 .valid-move {
-  box-shadow: inset 0 0 0 4px lightgreen;
+  box-shadow: inset 0 0 0 5px #55d66b;
 }
 
 .frozen-square {
@@ -50,7 +56,7 @@
 }
 
 .bomb-square {
-  box-shadow: inset 0 0 0 4px red;
+  box-shadow: inset 0 0 0 5px #ff4d4d;
 }
 
 .game-info {
@@ -66,14 +72,25 @@
 }
 
 .piece-image {
-  width: 70px;
-  height: 70px;
+  width: 90%;
+  height: 90%;
 }
 
 .dash-square {
-  box-shadow: inset 0 0 0 5px yellow;
+  box-shadow: inset 0 0 0 5px #ffd43b;
 }
 
 .rock-square {
   background-color: #500;
+}
+
+.piece-image {
+  width: 70px;
+  height: 70px;
+
+  transition: transform .15s ease;
+}
+
+.piece-image:hover {
+  transform: scale(1.08);
 }
