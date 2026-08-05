@@ -1,0 +1,15 @@
+.effect {
+  position: absolute;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 35px;
+
+  pointer-events: none;
+
+  transform: translate(-50%, -50%);
+
+  z-index: 10;
+}

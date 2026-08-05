@@ -1,0 +1,65 @@
+.freeze-break {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.ice-shard {
+  position: absolute;
+
+  width: 30px;
+  height: 30px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  animation: shard 350ms ease-out forwards;
+}
+.shard-0 {
+  --x: -35px;
+  --y: -25px;
+}
+
+.shard-1 {
+  --x: 40px;
+  --y: -15px;
+}
+
+.shard-2 {
+  --x: -20px;
+  --y: 35px;
+}
+
+.shard-3 {
+  --x: 30px;
+  --y: 30px;
+}
+
+.shard-4 {
+  --x: 0px;
+  --y: -45px;
+}
+
+.shard-5 {
+  --x: 0px;
+  --y: 45px;
+}
+
+@keyframes shard {
+  from {
+    transform: translate(-50%, -50%) scale(.3) rotate(0deg);
+    opacity: 1;
+  }
+
+  to {
+    transform:
+      translate(calc(-50% + var(--x)),
+                calc(-50% + var(--y)))
+      scale(.8)
+      rotate(360deg);
+
+    opacity: 0;
+  }
+}

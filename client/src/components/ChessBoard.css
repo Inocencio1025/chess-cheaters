@@ -33,6 +33,90 @@
   align-items: center;
 
   font-size: min(10vw, 64px);
+  position: relative;
+
+}
+
+.moving-piece {
+  position: absolute;
+
+  width: 70px;
+  height: 70px;
+
+  transform: translate(-50%, -50%);
+
+  transition:
+    left 180ms ease,
+    top 180ms ease;
+}
+
+.move-marker {
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: #8b5cf6;
+
+  position: absolute;
+    
+  animation: markerAppear .15s ease-out;
+
+}
+
+
+.capture-marker {
+  position: absolute;
+
+  font-size: 40px;
+
+  color: #8b5cf6;
+
+  font-weight: bold;
+
+  line-height: 1;
+
+  animation: markerAppear .15s ease-out;
+
+}
+
+@keyframes markerAppear {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.gun-marker,
+.freeze-marker {
+  position: absolute;
+
+  font-size: 30px;
+
+  animation: markerAppear .15s ease-out;
+}
+
+
+@keyframes markerAppear {
+
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+}
+
+.board-wrapper {
+  position: relative;
 }
 
 .light {
@@ -45,19 +129,50 @@
 
 .selected {
   box-shadow: inset 0 0 0 5px #8b5cf6;
+
+  animation: selectedPulse 1.2s infinite;
+}
+
+
+@keyframes selectedPulse {
+
+  0% {
+    box-shadow: inset 0 0 0 5px #8b5cf6;
+  }
+
+  50% {
+    box-shadow: inset 0 0 0 7px #a78bfa;
+  }
+
+  100% {
+    box-shadow: inset 0 0 0 5px #8b5cf6;
+  }
+
 }
 
 .valid-move {
-  box-shadow: inset 0 0 0 5px #55d66b;
+  box-shadow: inset 0 0 0 5px #c4b5fd;
+
+  animation: validPulse 1.2s infinite;
 }
 
-.frozen-square {
-  background-color: rgba(80, 180, 255, 0.45) !important;
+
+@keyframes validPulse {
+
+  0% {
+    opacity: .7;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: .7;
+  }
+
 }
 
-.bomb-square {
-  box-shadow: inset 0 0 0 5px #ff4d4d;
-}
 
 .game-info {
   display: flex;
@@ -71,10 +186,6 @@
   gap: 10px;
 }
 
-.piece-image {
-  width: 90%;
-  height: 90%;
-}
 
 .dash-square {
   box-shadow: inset 0 0 0 5px #ffd43b;
@@ -88,9 +199,286 @@
   width: 70px;
   height: 70px;
 
-  transition: transform .15s ease;
 }
 
 .piece-image:hover {
   transform: scale(1.08);
 }
+
+.piece-image.capturing-piece {
+  animation: piece-captured 600ms ease-out forwards;
+}
+
+@keyframes piece-captured {
+
+  0% {
+    opacity: 1;
+    transform:
+      rotate(0deg)
+      translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      rotate(60deg)
+      translateY(30px);
+  }
+
+}
+
+.piece-image {
+  width: 70px;
+  height: 70px;
+}
+
+.bomb-attached {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 30px;
+  height: 30px;
+
+  transform: translate(-50%, -30%);
+
+  animation: bombPulse 1s infinite;
+}
+
+@keyframes bombPulse {
+  0%, 100% {
+    transform: translate(-50%, -30%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -30%) scale(1.10);
+  }
+}
+.shake {
+  animation: board-shake 150ms;
+}
+
+
+@keyframes board-shake {
+  0% {
+    transform: translate(0);
+  }
+
+  25% {
+    transform: translate(-5px, 2px);
+  }
+
+  50% {
+    transform: translate(5px, -2px);
+  }
+
+  75% {
+    transform: translate(-3px, 2px);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+}
+
+.frozen-piece {
+  filter:
+    brightness(1.4)
+    saturate(.4)
+    hue-rotate(160deg);
+
+  opacity: .85;
+
+  animation: frozen-glow 1.5s infinite;
+}
+
+
+@keyframes frozen-glow {
+  0% {
+    filter:
+      brightness(1.3)
+      saturate(.4)
+      hue-rotate(160deg);
+  }
+
+  50% {
+    filter:
+      brightness(1.8)
+      saturate(.2)
+      hue-rotate(160deg);
+  }
+
+  100% {
+    filter:
+      brightness(1.3)
+      saturate(.4)
+      hue-rotate(160deg);
+  }
+}
+
+.piece-wrapper {
+  position: relative;
+}
+
+
+.ice-overlay {
+  position: absolute;
+
+  width: 90%;
+  height: 90%;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  opacity: .7;
+
+  pointer-events: none;
+
+  animation: ice-form 1s ease-out forwards;
+}
+
+@keyframes ice-form {
+  0% {
+    transform: translate(-50%, -50%) scale(.2);
+    opacity: 0;
+  }
+
+  35% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: .7;
+  }
+}
+
+.piece-wrapper {
+  position: relative;
+}
+
+.dash-moving {
+  filter: drop-shadow(0 0 15px #ffd43b);
+}
+
+.dash-piece {
+  animation: dash-charge .25s infinite;
+  filter: drop-shadow(0 0 10px gold);
+}
+
+
+@keyframes dash-charge {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+
+  20% {
+    transform: translateX(-4px) rotate(-3deg) scale(1.05);
+  }
+
+  40% {
+    transform: translateX(4px) rotate(3deg) scale(1.08);
+  }
+
+  60% {
+    transform: translateX(-3px) rotate(-2deg) scale(1.05);
+  }
+
+  80% {
+    transform: translateX(3px) rotate(2deg) scale(1.08);
+  }
+}
+
+
+.dash-moving::after {
+  content: "";
+  position: absolute;
+
+  width: 70px;
+  height: 70px;
+
+  background: inherit;
+
+  opacity: .4;
+
+  transform: translate(-20px, 0);
+
+  animation: dash-afterimage .18s linear;
+}
+
+
+@keyframes dash-afterimage {
+  from {
+    opacity: .6;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-40px, 0);
+  }
+}
+
+.phased-piece {
+  opacity: .45;
+
+  filter:
+    grayscale(.5)
+    brightness(1.6)
+    contrast(.85)
+    drop-shadow(0 0 14px rgba(120, 255, 255, .9));
+
+    
+  animation: phase-ghost 1.6s ease-in-out infinite;
+}
+
+@keyframes phase-ghost {
+
+  0%, 20%, 100% {
+    opacity: .45;
+    transform: translate(0, 0) scale(1);
+  }
+
+  10% {
+    opacity: .25;
+    transform: translate(-2px, 1px) scale(1.03);
+  }
+
+  12% {
+    opacity: .65;
+    transform: translate(2px, -1px) scale(.98);
+  }
+
+  30% {
+    opacity: .55;
+    transform: translateY(-2px);
+  }
+
+  45% {
+    opacity: .3;
+    transform:
+      translateX(-3px)
+      skewX(4deg);
+  }
+
+  47% {
+    opacity: .7;
+    transform:
+      translateX(2px)
+      skewX(-3deg);
+  }
+
+  60% {
+    opacity: .4;
+    transform: translateY(2px) scale(.99);
+  }
+
+  80% {
+    opacity: .6;
+    transform: translateY(-1px);
+  }
+}
+

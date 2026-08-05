@@ -7,4 +7,7 @@ export type Piece = {
   freezeTurns: number;
   hasBomb: boolean;
   isPhased: boolean;
+  captured?: boolean;
+  capturing?: boolean;
+
 };

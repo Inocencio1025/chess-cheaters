@@ -1,0 +1,27 @@
+.force-wave {
+  width: 80px;
+  height: 80px;
+
+  border-radius: 50%;
+
+  border: 5px solid rgba(120,220,255,.8);
+
+  animation: force-expand .5s ease-out forwards;
+
+  pointer-events: none;
+}
+
+
+@keyframes force-expand {
+
+  from {
+    transform: scale(.2);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(5);
+    opacity: 0;
+  }
+
+}

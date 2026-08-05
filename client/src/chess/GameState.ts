@@ -1,6 +1,7 @@
 import { createStartingBoard, createTestBoard } from "./Board";
 import type { Board } from "./Board";
 import type { Move } from "./Move";
+import type { Piece } from "./Piece";
 
 export type GameStatus =
   | "playing"
@@ -23,6 +24,11 @@ export interface GameState {
   gameOver: boolean;
   activeCheat: ActiveCheatState;
   message: string;
+  pushedPieces?: {
+    piece: Piece;
+    from: string;
+    to: string;
+  }[];
 }
 
 export function createGameState(): GameState {
@@ -68,5 +74,6 @@ export function createTestGameState(): GameState {
 export type ActiveCheatState = {
   dashActive: boolean;
   dashSecondMove: boolean;
+  dashSquare?: string;
   phaseActive: boolean;
 };

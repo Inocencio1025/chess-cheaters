@@ -11,9 +11,11 @@ export function useGun(
   targetSquare: string
 ): GameState {
 
-  const newBoard = { ...gameState.board };
+  const newBoard = {
+    ...gameState.board
+  };
 
-  delete newBoard[targetSquare];
+  newBoard[targetSquare] = null;
 
   return {
     ...gameState,
@@ -35,10 +37,10 @@ export function useFreeze(
   }
 
 
-return {
-  ...gameState,
-  board: newBoard
-};
+  return {
+    ...gameState,
+    board: newBoard
+  };
 }
 
 export function useBomb(
@@ -58,10 +60,10 @@ export function useBomb(
   };
 
 
-return {
-  ...gameState,
-  board: newBoard
-};
+  return {
+    ...gameState,
+    board: newBoard
+  };
 }
 export function useRoyalDecree(
   gameState: GameState
@@ -74,7 +76,8 @@ export function useRoyalDecree(
 }
 
 export function useDash(
-  gameState: GameState
+  gameState: GameState,
+  square: string
 ): GameState {
 
   return {
@@ -82,7 +85,8 @@ export function useDash(
     activeCheat: {
       ...gameState.activeCheat,
       dashActive: true,
-      dashSecondMove: false
+      dashSecondMove: false,
+      dashSquare: square
     }
   };
 }
@@ -139,6 +143,8 @@ export function usePhase(
   if (!piece) {
     return gameState;
   }
+
+  console.log("PHASING:", square, piece);
 
   const newBoard = {
     ...gameState.board,

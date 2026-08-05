@@ -35,11 +35,24 @@ const images = {
 };
 
 
-export default function PieceImage({ piece }: { piece: Piece }) {
+type Props = {
+  piece: Piece;
+  className?: string;
+};
+
+export default function PieceImage({
+  piece,
+  className = ""
+}: Props) {
+  
   return (
     <img
       src={images[piece.color][piece.type]}
-      className="piece-image"
+      className={
+        `piece-image ${
+          piece.capturing ? "capturing" : ""
+        } ${className}`
+      }
     />
   );
 }

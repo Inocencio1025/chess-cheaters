@@ -28,7 +28,8 @@ function App() {
 
       {screen === "cheat-select" && (
         <CheatSelectScreen
-          onStart={() => {
+          onStart={(cheats) => {
+            setSelectedCheats(cheats);
             setScreen("match");
           }}
         />

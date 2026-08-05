@@ -16,88 +16,103 @@ function createPiece(
   };
 }
 
+function createEmptyBoard(): Board {
+  const board = {} as Board;
+
+  for (const file of ["A", "B", "C", "D", "E", "F", "G", "H"]) {
+    for (let rank = 1; rank <= 8; rank++) {
+      board[`${file}${rank}`] = null;
+    }
+  }
+
+  return board;
+}
+
 export function createStartingBoard(): Board {
-  return {
-    A1: createPiece("rook", "white"),
-    B1: createPiece("knight", "white"),
-    C1: createPiece("bishop", "white"),
-    D1: createPiece("queen", "white"),
-    E1: createPiece("king", "white"),
-    F1: createPiece("bishop", "white"),
-    G1: createPiece("knight", "white"),
-    H1: createPiece("rook", "white"),
+  const board = createEmptyBoard();
 
-    A2: createPiece("pawn", "white"),
-    B2: createPiece("pawn", "white"),
-    C2: createPiece("pawn", "white"),
-    D2: createPiece("pawn", "white"),
-    E2: createPiece("pawn", "white"),
-    F2: createPiece("pawn", "white"),
-    G2: createPiece("pawn", "white"),
-    H2: createPiece("pawn", "white"),
+  board.A1 = createPiece("rook", "white");
+  board.B1 = createPiece("knight", "white");
+  board.C1 = createPiece("bishop", "white");
+  board.D1 = createPiece("queen", "white");
+  board.E1 = createPiece("king", "white");
+  board.F1 = createPiece("bishop", "white");
+  board.G1 = createPiece("knight", "white");
+  board.H1 = createPiece("rook", "white");
 
-    A8: createPiece("rook", "black"),
-    B8: createPiece("knight", "black"),
-    C8: createPiece("bishop", "black"),
-    D8: createPiece("queen", "black"),
-    E8: createPiece("king", "black"),
-    F8: createPiece("bishop", "black"),
-    G8: createPiece("knight", "black"),
-    H8: createPiece("rook", "black"),
+  board.A2 = createPiece("pawn", "white");
+  board.B2 = createPiece("pawn", "white");
+  board.C2 = createPiece("pawn", "white");
+  board.D2 = createPiece("pawn", "white");
+  board.E2 = createPiece("pawn", "white");
+  board.F2 = createPiece("pawn", "white");
+  board.G2 = createPiece("pawn", "white");
+  board.H2 = createPiece("pawn", "white");
 
-    A7: createPiece("pawn", "black"),
-    B7: createPiece("pawn", "black"),
-    C7: createPiece("pawn", "black"),
-    D7: createPiece("pawn", "black"),
-    E7: createPiece("pawn", "black"),
-    F7: createPiece("pawn", "black"),
-    G7: createPiece("pawn", "black"),
-    H7: createPiece("pawn", "black"),
-  };
+  board.A8 = createPiece("rook", "black");
+  board.B8 = createPiece("knight", "black");
+  board.C8 = createPiece("bishop", "black");
+  board.D8 = createPiece("queen", "black");
+  board.E8 = createPiece("king", "black");
+  board.F8 = createPiece("bishop", "black");
+  board.G8 = createPiece("knight", "black");
+  board.H8 = createPiece("rook", "black");
+
+  board.A7 = createPiece("pawn", "black");
+  board.B7 = createPiece("pawn", "black");
+  board.C7 = createPiece("pawn", "black");
+  board.D7 = createPiece("pawn", "black");
+  board.E7 = createPiece("pawn", "black");
+  board.F7 = createPiece("pawn", "black");
+  board.G7 = createPiece("pawn", "black");
+  board.H7 = createPiece("pawn", "black");
+
+  return board;
 }
 
 export function createTestBoard(): Board {
-  return {
-    // White
-    E1: createPiece("king", "white"),
-    D1: createPiece("queen", "white"),
-    A1: createPiece("rook", "white"),
-    F1: createPiece("rook", "white"),
+  const board = createEmptyBoard();
+  // White
+  board.E1 = createPiece("king", "white");
+  board.D1 = createPiece("queen", "white");
+  board.A1 = createPiece("rook", "white");
+  board.F1 = createPiece("rook", "white");
 
-    C4: createPiece("bishop", "white"),
-    G2: createPiece("bishop", "white"),
+  board.C4 = createPiece("bishop", "white");
+  board.G2 = createPiece("bishop", "white");
 
-    C3: createPiece("knight", "white"),
-    F3: createPiece("knight", "white"),
+  board.C3 = createPiece("knight", "white");
+  board.F3 = createPiece("knight", "white");
 
-    A2: createPiece("pawn", "white"),
-    B2: createPiece("pawn", "white"),
-    C2: createPiece("pawn", "white"),
-    D4: createPiece("pawn", "white"),
-    E4: createPiece("pawn", "white"),
-    F2: createPiece("pawn", "white"),
-    G3: createPiece("pawn", "white"),
-    H2: createPiece("pawn", "white"),
+  board.A2 = createPiece("pawn", "white");
+  board.B2 = createPiece("pawn", "white");
+  board.C2 = createPiece("pawn", "white");
+  board.D4 = createPiece("pawn", "white");
+  board.E4 = createPiece("pawn", "white");
+  board.F2 = createPiece("pawn", "white");
+  board.G3 = createPiece("pawn", "white");
+  board.H2 = createPiece("pawn", "white");
 
-    // Black
-    E8: createPiece("king", "black"),
-    D8: createPiece("queen", "black"),
-    A8: createPiece("rook", "black"),
-    F8: createPiece("rook", "black"),
+  // Black
+  board.E8 = createPiece("king", "black");
+  board.D8 = createPiece("queen", "black");
+  board.A8 = createPiece("rook", "black");
+  board.F8 = createPiece("rook", "black");
 
-    C5: createPiece("bishop", "black"),
-    G7: createPiece("bishop", "black"),
+  board.C5 = createPiece("bishop", "black");
+  board.G7 = createPiece("bishop", "black");
 
-    C6: createPiece("knight", "black"),
-    F6: createPiece("knight", "black"),
+  board.C6 = createPiece("knight", "black");
+  board.F6 = createPiece("knight", "black");
 
-    A7: createPiece("pawn", "black"),
-    B7: createPiece("pawn", "black"),
-    C7: createPiece("pawn", "black"),
-    D5: createPiece("pawn", "black"),
-    E5: createPiece("pawn", "black"),
-    F7: createPiece("pawn", "black"),
-    G6: createPiece("pawn", "black"),
-    H7: createPiece("pawn", "black"),
-  };
+  board.A7 = createPiece("pawn", "black");
+  board.B7 = createPiece("pawn", "black");
+  board.C7 = createPiece("pawn", "black");
+  board.D5 = createPiece("pawn", "black");
+  board.E5 = createPiece("pawn", "black");
+  board.F7 = createPiece("pawn", "black");
+  board.G6 = createPiece("pawn", "black");
+  board.H7 = createPiece("pawn", "black");
+
+  return board;
 }

@@ -1,0 +1,91 @@
+.gun-effect {
+  position: relative;
+  animation: gun-appear 1.5s ease-out;
+}
+
+
+.gun {
+  width: 80px;
+  height: 80px;
+
+  animation: recoil .3s ease;
+}
+
+
+@keyframes gun-appear {
+
+  0% {
+    opacity: 0;
+    transform: scale(.5);
+  }
+
+  20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  80% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(.8);
+  }
+
+}
+
+
+
+@keyframes recoil {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-8px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+
+}
+
+
+
+.muzzle-flash {
+  position: absolute;
+
+  right: -18px;
+  top: 50%;
+
+  width: 40px;
+  height: 20px;
+
+  transform: translateY(-50%);
+
+  background: radial-gradient(circle, white 0%, #ffd54a 40%, transparent 70%);
+  border-radius: 50% 70% 70% 50%;
+
+  opacity: 0;
+  animation: muzzleFlash 120ms ease-out 600ms forwards;
+}
+
+@keyframes muzzleFlash {
+  0% {
+    opacity: 1;
+    transform: translateY(-50%) scale(0.3);
+  }
+
+  40% {
+    transform: translateY(-50%) scale(1.4);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) scale(2);
+  }
+}

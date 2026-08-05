@@ -125,7 +125,8 @@ export function executeCheat(
 
     case "dash":
       newState = useDash(
-        stateAfterCost
+        stateAfterCost,
+        casterSquare!
       );
       break;
 
@@ -175,17 +176,18 @@ export function executeCheat(
     }
   }
 
-
+/*
   console.log(
     "before:",
     gameState.whiteTempo,
     "after cost:",
     stateAfterCost.whiteTempo
   );
-
+*/
   if (
     cheat === "phase" ||
-    cheat === "royal-decree"
+    cheat === "royal-decree" ||
+    cheat === "dash"
   ) {
     return newState;
   }
@@ -213,7 +215,8 @@ export function prepareCheat(
   switch (cheat) {
     case "dash":
       return useDash(
-        newState
+        newState,
+        square
       );
 
     default:

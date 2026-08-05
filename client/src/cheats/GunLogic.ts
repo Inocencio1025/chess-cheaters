@@ -19,6 +19,7 @@ export function getGunTargets(
   ).filter(targetSquare => {
     const target = board[targetSquare];
 
+
     // Only allow captures
     return target !== null &&
       target.color !== piece.color;

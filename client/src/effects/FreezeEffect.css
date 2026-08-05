@@ -1,0 +1,22 @@
+.freeze-effect {
+  font-size: 55px;
+  animation: freeze-pop .6s ease-out forwards;
+}
+
+
+@keyframes freeze-pop {
+  0% {
+    opacity: 0;
+    transform: scale(.3) rotate(0deg);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1.4) rotate(30deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}

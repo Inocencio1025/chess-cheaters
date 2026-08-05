@@ -92,6 +92,50 @@ export function updateTargets(
     };
   }
 
+  if (action === "bomb" && !selectedSquare) {
+    return {
+      gameState,
+      currentAction: action,
+      validMoves: Object.keys(gameState.board).filter(square => {
+        const piece = gameState.board[square];
+
+        return piece !== null &&
+          piece.color === gameState.currentTurn;
+      })
+    };
+  }
+
+  if (action === "dash" && !selectedSquare) {
+    return {
+      gameState,
+      currentAction: action,
+      validMoves: Object.keys(gameState.board).filter(square => {
+        const piece = gameState.board[square];
+
+        return piece !== null &&
+          piece.color === gameState.currentTurn;
+      })
+    };
+  }
+
+  if (action === "phase" && !selectedSquare) {
+
+    const validMoves = Object.keys(gameState.board).filter(square => {
+      const piece = gameState.board[square];
+
+      return piece !== null &&
+        piece.color === gameState.currentTurn;
+    });
+
+    console.log("Phase validMoves:", validMoves);
+
+    return {
+      gameState,
+      currentAction: action,
+      validMoves
+    };
+  }
+
   const selectedPiece = gameState.board[selectedSquare];
 
   if (!selectedPiece) {
@@ -102,54 +146,31 @@ export function updateTargets(
     };
   }
 
-  if (action === "dash") {
+  if (action === "phase" && selectedSquare) {
 
-    if (gameState.activeCheat.dashActive) {
-
-      const selectedPiece = gameState.board[selectedSquare];
-
-      if (!selectedPiece) {
-        return {
-          gameState,
-          currentAction: "move",
-          validMoves: []
-        };
-      }
-
-      return {
-        gameState,
-        currentAction: "move",
-        validMoves: getLegalMoves(
-          selectedPiece,
-          selectedSquare,
-          gameState.board,
-          gameState.terrain,
-          gameState.moveHistory,
-          gameState.royalDecreeActive,
-          false
-        )
-      };
-    }
-
-    const newState = prepareCheat(
-      "dash",
+    const newState = executeCheat(
+      "phase",
       gameState,
-      ""
+      selectedSquare
     );
 
     return {
       gameState: newState,
       currentAction: "move",
       validMoves: getLegalMoves(
-        selectedPiece,
+        newState.board[selectedSquare]!,
         selectedSquare,
         newState.board,
         newState.terrain,
         newState.moveHistory,
-        newState.royalDecreeActive,
+        newState.royalDecreeActive
       )
     };
   }
+
+
+
+
 
 
   if (action === "royal-decree") {
@@ -184,14 +205,9 @@ export function updateTargets(
     }
 
     return {
-      gameState: executeCheat(
-        "force-push",
-        gameState,
-        "",
-        selectedSquare
-      ),
-      currentAction: "move",
-      validMoves: []
+      gameState,
+      currentAction: action,
+      validMoves: [selectedSquare]
     };
   }
 
@@ -211,6 +227,25 @@ export function updateTargets(
     };
   }
 
+  if (action === "dash" && selectedSquare) {
+    return {
+      gameState: executeCheat(
+        "dash",
+        gameState,
+        selectedSquare,
+        selectedSquare
+      ),
+      currentAction: "move",
+      validMoves: getLegalMoves(
+        selectedPiece,
+        selectedSquare,
+        gameState.board,
+        gameState.terrain,
+        gameState.moveHistory,
+        gameState.royalDecreeActive
+      )
+    };
+  }
 
   return {
     gameState,
@@ -264,6 +299,7 @@ export function executeSelectedCheat(
   targetSquare: string,
   magnetMode: "pull" | "push"
 ) {
+
   if (action === "move") {
     return null;
   }
@@ -285,18 +321,15 @@ export function executeSelectedCheat(
 
   if (action === "phase") {
 
-    const phasedState = executeCheat(
+    const square = selectedSquare || targetSquare;
+
+    return executeCheat(
       "phase",
       gameState,
-      selectedSquare
-    );
-
-    return makeMove(
-      phasedState,
-      selectedSquare,
-      targetSquare
+      square
     );
   }
+
 
 
   return executeCheat(
@@ -312,14 +345,22 @@ export function moveSelectedPiece(
   gameState: GameState,
   from: string,
   to: string
-): GameState {
+) {
 
-  return makeMove(
+  const capturedPiece = gameState.board[to];
+
+  const result = makeMove(
     gameState,
     from,
     to,
     false
   );
+
+  return {
+    state: result,
+    capturedPiece,
+    capturedSquare: capturedPiece ? to : null
+  };
 }
 
 export function applyPhaseBeforeMove(
@@ -348,6 +389,8 @@ export function handleDashSecondMove(
   newState: GameState,
   squareName: string
 ) {
+  console.log("DASH STATE:", gameState.activeCheat);
+
   if (
     !gameState.activeCheat.dashActive
   ) {
@@ -369,7 +412,8 @@ export function handleDashSecondMove(
     ...newState,
     activeCheat: {
       ...newState.activeCheat,
-      dashSecondMove: true
+      dashSecondMove: true,
+      dashSquare: squareName
     }
   };
 
@@ -418,8 +462,6 @@ export function handleDashSecondMove(
 export function finishMove(
   gameState: GameState
 ): GameState {
-
-  console.log("finishMove", gameState.activeCheat);
 
   return endTurn(
     {

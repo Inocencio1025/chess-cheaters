@@ -1,4 +1,5 @@
 import type { Board } from "../chess/Board";
+import type { Piece } from "../chess/Piece";
 
 
 export function applyForcePush(
@@ -18,6 +19,11 @@ export function applyForcePush(
 
 
   const affectedSquares: string[] = [];
+  const pushedPieces: {
+    piece: Piece;
+    from: string;
+    to: string;
+  }[] = [];
 
 
   for (let fileChange = -1; fileChange <= 1; fileChange++) {
@@ -116,6 +122,11 @@ export function applyForcePush(
       continue;
     }
 
+    pushedPieces.push({
+      piece,
+      from: square,
+      to: destination
+    });
 
     newBoard[destination] = piece;
     newBoard[square] = null;
