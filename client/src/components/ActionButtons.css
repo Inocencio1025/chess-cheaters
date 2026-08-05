@@ -17,7 +17,7 @@
 .action-buttons {
   display: grid;
 
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 
   gap: 10px;
 
@@ -26,16 +26,20 @@
 
 
 .action-card {
-  min-height: 60px;
+  min-height: 70px;
 
-  border: none;
-  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
 
-  background: #2a2d3f;
+  background: linear-gradient(
+    180deg,
+    #343853,
+    #26293d
+  );
 
   color: white;
 
-  cursor: pointer;
+  font-family: Inter, system-ui, sans-serif;
 
   display: flex;
   flex-direction: column;
@@ -44,19 +48,38 @@
 
   transition:
     transform .15s ease,
-    background .15s ease;
+    box-shadow .15s ease,
+    border-color .15s ease;
 }
-
 
 .action-card:hover:not(:disabled) {
   transform: translateY(-3px);
-  background: #34304f;
+
+  border-color: #8b5cf6;
+
+  box-shadow:
+    0 0 18px rgba(139,92,246,.35);
 }
 
+.action-card strong {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .4px;
+}
 
 .action-card span {
-  color: #c4c4d4;
-  font-size: .85rem;
+  margin-top: 6px;
+
+  padding: 2px 8px;
+
+  border-radius: 999px;
+
+  background: rgba(139,92,246,.18);
+
+  color: #cdb8ff;
+
+  font-size: .8rem;
+  font-weight: 700;
 }
 
 
@@ -66,22 +89,55 @@
 }
 
 
-.magnet-controls {
+.magnet-switch {
   display: flex;
-  gap: 10px;
-}
-
-
-.magnet-controls button {
-  padding: 8px 20px;
-
-  border: none;
-  border-radius: 10px;
-
-  background: #8b5cf6;
+  align-items: center;
+  gap: 12px;
 
   color: white;
-
-  cursor: pointer;
+  font-weight: bold;
 }
 
+.switch {
+  width: 64px;
+  height: 32px;
+
+  position: relative;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #454866;
+
+  cursor: pointer;
+
+  transition: background .2s ease;
+}
+
+.switch.pull {
+  background: #6366f1;
+}
+
+.switch.push {
+  background: #8b5cf6;
+}
+
+.knob {
+  position: absolute;
+
+  top: 4px;
+  left: 4px;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  transition: transform .2s ease;
+}
+
+.switch.push .knob {
+  transform: translateX(32px);
+}

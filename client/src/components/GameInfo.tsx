@@ -9,7 +9,6 @@ type Props = {
   autoFlip: boolean;
   setAutoFlip: React.Dispatch<React.SetStateAction<boolean>>
   message: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>
 };
 
 
@@ -17,10 +16,6 @@ function GameInfo({
   currentTurn,
   status,
   currentAction,
-  whiteTempo: whiteTempo,
-  blackTempo: blackTempo,
-  autoFlip,
-  setAutoFlip,
   message
 }: Props) {
 
@@ -28,42 +23,20 @@ function GameInfo({
     <div className="game-info">
 
       <div className="game-status">
-
         <p>
-          {currentTurn}'s turn
-        </p>
-
-        <p>
-          {status}
-        </p>
-
-        <p>
-          {currentAction}
-        </p>
-
-      </div>
-
-
-      <button
-        onClick={() => setAutoFlip(prev => !prev)}
-      >
-        {autoFlip ? "Disable Auto Flip" : "Enable Auto Flip"}
-      </button>
-
-
-      <div className="tempo-display">
-        <p>
-          ⚪ {whiteTempo}
-        </p>
-
-        <p>
-          ⚫ {blackTempo}
+          {message
+            ? message.split(/(tempo)/gi).map((part, index) =>
+              part.toLowerCase() === "tempo" ? (
+                <span key={index} className="tempo-word">
+                  {part}
+                </span>
+              ) : (
+                part
+              )
+            )
+            : `${currentTurn}'s turn: ${status}`}
         </p>
       </div>
-
-      <p className="game-message">
-        {message}
-      </p>
 
     </div>
   );

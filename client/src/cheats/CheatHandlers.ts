@@ -110,7 +110,8 @@ export function useMagnet(
   return {
     ...gameState,
     board: newBoard.board,
-    terrain: newBoard.terrain
+    terrain: newBoard.terrain,
+    movedPieces: newBoard.movedPieces
   };
 }
 
@@ -129,7 +130,8 @@ export function useForcePush(
   return {
     ...gameState,
     board: newBoard.board,
-    terrain: newBoard.terrain
+    terrain: newBoard.terrain,
+    pushedPieces: newBoard.pushedPieces
   };
 }
 
@@ -143,8 +145,6 @@ export function usePhase(
   if (!piece) {
     return gameState;
   }
-
-  console.log("PHASING:", square, piece);
 
   const newBoard = {
     ...gameState.board,

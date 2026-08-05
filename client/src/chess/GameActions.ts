@@ -1,6 +1,8 @@
 import type { GameState } from "./GameState";
 import { movePiece } from "./GameLogic";
 import { endTurn } from "./TurnLogic";
+import { rewardCaptureTempo } from "./TempoLogic";
+
 
 export function makeMove(
   gameState: GameState,
@@ -17,7 +19,11 @@ export function makeMove(
   );
 
   const move = result.move;
-  const captured = move.capturedPiece;
+
+  const tempoReward = rewardCaptureTempo(
+    gameState,
+    move.capturedPiece !== undefined
+  );
 
   const stateAfterMove = {
     ...gameState,
@@ -28,15 +34,9 @@ export function makeMove(
       move
     ],
 
-    whiteTempo:
-      captured && gameState.currentTurn === "white"
-        ? gameState.whiteTempo + 1
-        : gameState.whiteTempo,
-
-    blackTempo:
-      captured && gameState.currentTurn === "black"
-        ? gameState.blackTempo + 1
-        : gameState.blackTempo
+    whiteTempo: tempoReward.whiteTempo,
+    blackTempo: tempoReward.blackTempo,
+    message: tempoReward.message
   };
 
   if (!endPlayerTurn) {

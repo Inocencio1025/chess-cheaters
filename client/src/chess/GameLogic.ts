@@ -49,10 +49,6 @@ export function movePiece(
     throw new Error("No piece at source square");
   }
 
-  if (newTerrain[to] === "rock") {
-    delete newTerrain[to];
-  }
-
   const move: Move = {
     from,
     to,

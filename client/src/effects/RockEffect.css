@@ -1,0 +1,23 @@
+.falling-rock {
+  width: 60px;
+  height: 60px;
+
+  animation: rock-fall 400ms ease-in forwards;
+}
+
+@keyframes rock-fall {
+  from {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+
+  60% {
+    transform: translateY(10px);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

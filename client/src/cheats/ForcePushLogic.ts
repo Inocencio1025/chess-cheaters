@@ -9,6 +9,11 @@ export function applyForcePush(
 ): {
   board: Board;
   terrain: Record<string, "rock" | null>;
+  pushedPieces: {
+    piece: Piece;
+    from: string;
+    to: string;
+  }[];
 } {
 
   const newBoard = { ...board };
@@ -134,7 +139,8 @@ export function applyForcePush(
 
   return {
     board: newBoard,
-    terrain: newTerrain
+    terrain: newTerrain,
+    pushedPieces
   };
 
 }

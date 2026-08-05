@@ -12,6 +12,12 @@ export type GameStatus =
 export type Color = "white" | "black";
 export type Terrain = "rock";
 
+export type TempoMessage = {
+  amount: number;
+  title: string;
+  description?: string;
+};
+
 export interface GameState {
   board: Board;
   terrain: Record<string, Terrain | null>;
@@ -24,7 +30,13 @@ export interface GameState {
   gameOver: boolean;
   activeCheat: ActiveCheatState;
   message: string;
+  tempoMessage: TempoMessage | null;
   pushedPieces?: {
+    piece: Piece;
+    from: string;
+    to: string;
+  }[];
+  movedPieces?: {
     piece: Piece;
     from: string;
     to: string;
@@ -47,6 +59,7 @@ export function createGameState(): GameState {
       dashSecondMove: false,
       phaseActive: false
     },
+    tempoMessage: null,
     message: ""
   };
 }
@@ -67,7 +80,9 @@ export function createTestGameState(): GameState {
       dashSecondMove: false,
       phaseActive: false
     },
+    tempoMessage: null,
     message: ""
+
   };
 }
 

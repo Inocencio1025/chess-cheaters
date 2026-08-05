@@ -14,6 +14,7 @@ type Props = {
   setMagnetMode: (mode: "pull" | "push") => void;
   dashActive: boolean;
   availableCheats: CheatType[];
+  currentAction: Action;
 };
 
 
@@ -23,7 +24,8 @@ function ActionButtons({
   magnetMode,
   setMagnetMode,
   dashActive,
-  availableCheats
+  availableCheats,
+  currentAction
 }: Props) {
 
   return (
@@ -61,22 +63,25 @@ function ActionButtons({
       </div>
 
 
-      {availableCheats.includes("magnet") && (
-        <div className="magnet-controls">
+      {currentAction === "magnet" && (
+        <div className="magnet-switch">
+
+          <span>🧲 Pull</span>
 
           <button
-            onClick={() => setMagnetMode("pull")}
-            disabled={magnetMode === "pull"}
+            className={`switch ${magnetMode}`}
+            onClick={() =>
+              setMagnetMode(
+                magnetMode === "pull"
+                  ? "push"
+                  : "pull"
+              )
+            }
           >
-            Pull
+            <div className="knob" />
           </button>
 
-          <button
-            onClick={() => setMagnetMode("push")}
-            disabled={magnetMode === "push"}
-          >
-            Push
-          </button>
+          <span>Push</span>
 
         </div>
       )}

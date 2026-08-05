@@ -1,0 +1,17 @@
+.tempo-popup {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.tempo-amount {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.tempo-title {
+  font-size: 20px;
+}
+
+.tempo-description {
+  font-size: 14px;
+}

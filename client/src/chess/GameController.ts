@@ -127,7 +127,6 @@ export function updateTargets(
         piece.color === gameState.currentTurn;
     });
 
-    console.log("Phase validMoves:", validMoves);
 
     return {
       gameState,
@@ -389,7 +388,6 @@ export function handleDashSecondMove(
   newState: GameState,
   squareName: string
 ) {
-  console.log("DASH STATE:", gameState.activeCheat);
 
   if (
     !gameState.activeCheat.dashActive

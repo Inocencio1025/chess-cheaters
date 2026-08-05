@@ -1,10 +1,10 @@
 .game-container {
   min-height: 100vh;
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
+
   align-items: center;
-  gap: 15px;
 
   background: #1b1d2a;
 }
@@ -18,6 +18,14 @@
 
   box-shadow:
     0 20px 50px rgba(0,0,0,.4);
+}
+
+.game-info {
+  width: 100%;
+  max-width: 500px;
+
+  padding-top: 10px;
+  margin-bottom: 10px;
 }
 
 .rank {
@@ -49,6 +57,14 @@
     left 180ms ease,
     top 180ms ease;
 }
+
+.move-marker,
+.capture-marker,
+.gun-marker,
+.freeze-marker {
+  z-index: 2;
+}
+
 
 .move-marker {
   width: 18px;
@@ -117,6 +133,9 @@
 
 .board-wrapper {
   position: relative;
+
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .light {
@@ -181,24 +200,35 @@
   gap: 15px;
 }
 
+.tempo-display {
+  margin-top: 12px;
+}
+
+.action-panel {
+  margin-top: 12px;
+  padding-bottom: 20px;
+}
+
 .action-buttons {
   display: flex;
   gap: 10px;
 }
 
+.placed-rock {
+  position: absolute;
 
-.dash-square {
-  box-shadow: inset 0 0 0 5px #ffd43b;
-}
+  width: 75%;
+  height: 75%;
 
-.rock-square {
-  background-color: #500;
+  object-fit: contain;
+
+  z-index: 0;
 }
 
 .piece-image {
   width: 70px;
   height: 70px;
-
+  z-index: 1;
 }
 
 .piece-image:hover {
@@ -482,3 +512,95 @@
   }
 }
 
+.royal-piece {
+  animation: royal-float 1.5s infinite ease-in-out;
+  filter: drop-shadow(0 0 10px gold);
+}
+
+@keyframes royal-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.crown-overlay {
+  position: absolute;
+
+  width: 40px;
+  height: 40px;
+
+  left: 50%;
+  top: -15%;
+
+  transform: translateX(-50%);
+
+  pointer-events: none;
+  z-index: 1;
+
+  animation:
+    crown-appear .4s ease-out,
+    crown-float 1s .4s ease-in-out infinite;
+}
+
+
+@keyframes crown-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px) scale(.2);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes crown-float {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+.royal-moving {
+  filter: drop-shadow(0 0 15px gold);
+}
+
+.royal-moving::after {
+  content: "";
+  position: absolute;
+
+  width: 70px;
+  height: 70px;
+
+  background: radial-gradient(
+    circle,
+    rgba(255,215,0,.6),
+    transparent 70%
+  );
+
+  left: -40px;
+  top: 0;
+
+  animation: royal-trail .3s ease-out forwards;
+}
+
+
+@keyframes royal-trail {
+  from {
+    opacity: .8;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(.2) translateX(-30px);
+  }
+}

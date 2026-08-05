@@ -1,5 +1,5 @@
 import "./ChessBoard.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createGameState, createTestGameState } from "../chess/GameState";
 import type { GameState } from "../chess/GameState";
 import { files, ranks } from "../chess/BoardConstants";
@@ -25,8 +25,12 @@ import EffectOverlay from "../effects/EffectOverlay";
 import { createEffect } from "../effects/EffectManager";
 import bomb from "../assets/effects/bomb.svg"
 import iceCube from "../assets/effects/ice.svg";
+import rock from "../assets/effects/rock.svg"
+import crown from "../assets/effects/crown.svg"
 import { notationToPosition, positionToPixels } from "../chess/Position";
 import { getLegalMoves } from "../chess/MoveLogic";
+import TempoPopup from "./TempoPopup";
+import TempoDisplay from "./TempoDisplay";
 
 type Props = {
   availableCheats: CheatType[];
@@ -35,7 +39,6 @@ type Props = {
 function ChessBoard({ availableCheats }: Props) {
   const [autoFlip, setAutoFlip] = useState(false);
   const [magnetMode, setMagnetMode] = useState<"pull" | "push">("pull");
-  const [message, setMessage] = useState("");
   const [activeEffects, setActiveEffects] = useState<ActiveEffect[]>([]);
   const [selection, setSelection] = useState({
     selectedSquare: "",
@@ -44,9 +47,25 @@ function ChessBoard({ availableCheats }: Props) {
   });
 
   const [gameState, setGameState] = useState<GameState>(
-    //createGameState()
-    createTestGameState()
+    createGameState()
+    //createTestGameState()
   );
+
+  useEffect(() => {
+    if (!gameState.tempoMessage) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setGameState(prev => ({
+        ...prev,
+        tempoMessage: null
+      }));
+    }, 2500);
+
+    return () => clearTimeout(timer);
+
+  }, [gameState.tempoMessage]);
 
   const [movingPiece, setMovingPiece] = useState<{
     piece: Piece;
@@ -58,8 +77,18 @@ function ChessBoard({ availableCheats }: Props) {
     left: string;
     top: string;
   } | null>(null);
-  
-  
+
+  const [movingPieces, setMovingPieces] = useState<{
+    piece: Piece;
+    from: string;
+    to: string;
+  }[]>([]);
+
+  const [movingPiecePositions, setMovingPiecePositions] = useState<
+    Record<string, { left: string; top: string }>
+  >({});
+
+
   const [capturingSquare, setCapturingSquare] = useState<string | null>(null);
 
   const flipped = autoFlip && gameState.currentTurn === "black";
@@ -68,36 +97,8 @@ function ChessBoard({ availableCheats }: Props) {
 
   const GUN_FIRE_DELAY = 700;
   const CAPTURE_ANIMATION_TIME = 600;
+  const MESSAGE_HANG_TIME = 1500;
 
-
-  // -----------test functions --------------
-  function testGunEffect() {
-    playEffect(
-      createEffect(
-        "gun",
-        "c4",
-        "d5"
-      ),
-      1500
-    );
-  }
-
-  function testCaptureEffect() {
-    const piece = gameState.board["E4"];
-
-    if (!piece) return;
-
-    playEffect(
-      createEffect(
-        "capture",
-        undefined,
-        "E4",
-        piece
-      )
-    );
-  }
-
-  // -----------test functions end --------------
   function playEffect(
     effect: ActiveEffect,
     duration = 500
@@ -120,7 +121,6 @@ function ChessBoard({ availableCheats }: Props) {
     if (selection.validMoves.includes(squareName)) {
 
       if (selection.currentAction !== "move") {
-
 
         if (selection.currentAction === "gun") {
 
@@ -191,8 +191,6 @@ function ChessBoard({ availableCheats }: Props) {
         }
 
         if (selection.currentAction === "force-push") {
-        
-          console.log("FORCE PUSH EFFECT");
 
           playEffect(
             createEffect(
@@ -202,6 +200,7 @@ function ChessBoard({ availableCheats }: Props) {
             ),
             500
           );
+          triggerShake();
 
           setTimeout(() => {
 
@@ -213,15 +212,149 @@ function ChessBoard({ availableCheats }: Props) {
             );
 
             if (newState) {
-              setGameState(newState);
-              clearSelection();
+              setMovingPieces(newState.pushedPieces ?? []);
+
+              const startPositions: Record<string, { left: string; top: string }> = {};
+
+              (newState.pushedPieces ?? []).forEach((p) => {
+                startPositions[p.from] = positionToPixels(
+                  notationToPosition(p.from)
+                );
+              });
+
+              setMovingPiecePositions(startPositions);
+
+
+              setTimeout(() => {
+                const endPositions: Record<string, { left: string; top: string }> = {};
+
+                (newState.pushedPieces ?? []).forEach((p) => {
+                  endPositions[p.from] = positionToPixels(
+                    notationToPosition(p.to)
+                  );
+                });
+
+                setMovingPiecePositions(endPositions);
+
+              }, 20);
+
+              setTimeout(() => {
+                setGameState(newState);
+                clearSelection();
+              }, 200);
+
+              setTimeout(() => {
+                setMovingPieces([]);
+                setMovingPiecePositions({});
+              }, 500);
             }
 
-          }, 300);
+          }, 300);;
 
           return;
         }
 
+        if (selection.currentAction === "magnet") {
+
+          playEffect(
+            {
+              ...createEffect(
+                "magnet",
+                selection.selectedSquare,
+                squareName,
+              ),
+              magnetMode: magnetMode
+            },
+            1500
+          );
+
+          setTimeout(() => {
+
+            const newState = executeSelectedCheat(
+              gameState,
+              "magnet",
+              selection.selectedSquare,
+              squareName,
+              magnetMode
+            );
+
+            if (newState) {
+
+              setMovingPieces(newState.movedPieces ?? []);
+
+              const startPositions: Record<string, { left: string; top: string }> = {};
+
+              (newState.movedPieces ?? []).forEach((p) => {
+                startPositions[p.from] = positionToPixels(
+                  notationToPosition(p.from)
+                );
+              });
+
+              setMovingPiecePositions(startPositions);
+
+
+              setTimeout(() => {
+                const endPositions: Record<string, { left: string; top: string }> = {};
+
+                (newState.movedPieces ?? []).forEach((p) => {
+                  endPositions[p.from] = positionToPixels(
+                    notationToPosition(p.to)
+                  );
+                });
+
+                setMovingPiecePositions(endPositions);
+
+              }, 20);
+
+
+              setTimeout(() => {
+                setGameState(newState);
+                clearSelection();
+              }, 200);
+
+
+              setTimeout(() => {
+                setMovingPieces([]);
+                setMovingPiecePositions({});
+              }, 500);
+            }
+
+          }, 900);
+
+          return;
+        }
+
+
+        if (selection.currentAction === "rock") {
+
+          playEffect(
+            createEffect(
+              "rock",
+              undefined,
+              squareName
+            ),
+            500
+          );
+
+          setTimeout(() => {
+
+            const newState = executeSelectedCheat(
+              gameState,
+              "rock",
+              squareName,
+              squareName,
+              magnetMode
+            );
+
+            if (newState) {
+              setGameState(newState);
+              clearSelection();
+            }
+
+          }, 400);
+
+          return;
+        }
 
         const newState = handleCheatClick(
           gameState,
@@ -231,11 +364,6 @@ function ChessBoard({ availableCheats }: Props) {
         );
 
         if (newState) {
-
-          if (newState.pushedPieces) {
-            console.log("PUSHED:", newState.pushedPieces);
-          }
-
           setGameState(newState);
           clearSelection();
         }
@@ -374,8 +502,19 @@ function ChessBoard({ availableCheats }: Props) {
 
         // Normal ending
         const finishedState = finishMove(newState);
-        setGameState(finishedState);
-        clearSelection();
+        setGameState({
+          ...finishedState,
+        });
+
+        if (finishedState.message) {
+          setTimeout(() => {
+            setGameState(prev => ({
+              ...prev,
+              message: ""
+            }));
+          }, MESSAGE_HANG_TIME);
+        } clearSelection();
+        
         setMovingPiece(null);
         setMovingPiecePosition(null);
         setCapturingSquare(null);
@@ -384,6 +523,8 @@ function ChessBoard({ availableCheats }: Props) {
         if (finishedState.status === "checkmate") {
           alert("Checkmate!");
         }
+
+
 
         setMovingPiece(null);
       }, 200);
@@ -481,7 +622,9 @@ function ChessBoard({ availableCheats }: Props) {
     setGameState(result.gameState);
 
     setSelection({
-      selectedSquare: selection.selectedSquare,
+      selectedSquare: action === "rock"
+        ? ""
+        : selection.selectedSquare,
       currentAction: result.currentAction,
       validMoves: result.validMoves
     });
@@ -523,6 +666,20 @@ function ChessBoard({ availableCheats }: Props) {
     }, 700);
   }
 
+  function showTempoMessage(message: string) {
+    setGameState(prev => ({
+      ...prev,
+      message
+    }));
+
+    setTimeout(() => {
+      setGameState(prev => ({
+        ...prev,
+        message: ""
+      }));
+    }, 3000);
+  }
+
   function triggerShake() {
     setShaking(true);
 
@@ -534,6 +691,19 @@ function ChessBoard({ availableCheats }: Props) {
   return (
     <>
       <div className="game-container">
+        <GameInfo
+          currentTurn={gameState.currentTurn}
+          status={gameState.status}
+          currentAction={selection.currentAction}
+          whiteTempo={gameState.whiteTempo}
+          blackTempo={gameState.blackTempo}
+          autoFlip={autoFlip}
+          setAutoFlip={setAutoFlip}
+          message={gameState.message}
+
+        />
+
+
         <div className={`board-wrapper ${shaking ? "shake" : ""}`}>
           <div className="chess-board">
 
@@ -564,6 +734,7 @@ function ChessBoard({ availableCheats }: Props) {
 
                       {piece &&
                         !(movingPiece?.from === squareName) &&
+                        !(movingPieces.some(p => p.from === squareName)) &&
                         !(capturingSquare === squareName) && (
                           <>
                             <PieceImage
@@ -577,7 +748,14 @@ function ChessBoard({ availableCheats }: Props) {
                                 gameState.activeCheat.phaseActive &&
                                   piece.isPhased
                                   ? "phased-piece"
+                                  : "",
+
+                                gameState.royalDecreeActive &&
+                                  piece.type === "king" &&
+                                  piece.color === gameState.currentTurn
+                                  ? "royal-piece"
                                   : ""
+
                               ].join(" ")}
                             />
                             {piece.hasBomb && (
@@ -586,6 +764,14 @@ function ChessBoard({ availableCheats }: Props) {
                                 className="bomb-attached"
                               />
                             )}
+                            {gameState.royalDecreeActive &&
+                              piece.type === "king" &&
+                              piece.color === gameState.currentTurn && (
+                                <img
+                                  src={crown}
+                                  className="crown-overlay"
+                                />
+                              )}
                             {piece.freezeTurns > 0 && (
                               <img
                                 src={iceCube}
@@ -595,6 +781,12 @@ function ChessBoard({ availableCheats }: Props) {
                           </>
                         )}
 
+                      {gameState.terrain[squareName] === "rock" && (
+                        <img
+                          src={rock}
+                          className="placed-rock"
+                        />
+                      )}
                       {getSquareMarker(
                         squareName,
                         piece,
@@ -611,17 +803,33 @@ function ChessBoard({ availableCheats }: Props) {
 
           </div>
 
+
+
           {movingPiece && movingPiecePosition && (
             <div
               className={`moving-piece ${gameState.activeCheat.dashActive
                 ? "dash-moving"
                 : ""
+                } ${gameState.royalDecreeActive &&
+                  movingPiece.piece.type === "king"
+                  ? "royal-moving"
+                  : ""
                 }`}
               style={movingPiecePosition}
             >
               <PieceImage piece={movingPiece.piece} />
             </div>
           )}
+
+          {movingPieces.map((p) => (
+            <div
+              key={p.from}
+              className="moving-piece"
+              style={movingPiecePositions[p.from]}
+            >
+              <PieceImage piece={p.piece} />
+            </div>
+          ))}
 
           <EffectOverlay
             effects={activeEffects}
@@ -631,17 +839,12 @@ function ChessBoard({ availableCheats }: Props) {
 
         </div>
 
-        <GameInfo
-          currentTurn={gameState.currentTurn}
-          status={gameState.status}
-          currentAction={selection.currentAction}
+        <TempoDisplay
           whiteTempo={gameState.whiteTempo}
           blackTempo={gameState.blackTempo}
-          autoFlip={autoFlip}
-          setAutoFlip={setAutoFlip}
-          message={message}
-          setMessage={setMessage}
         />
+
+
 
         <ActionButtons
           updateTargets={handleUpdateTargets}
@@ -650,6 +853,7 @@ function ChessBoard({ availableCheats }: Props) {
           setMagnetMode={setMagnetMode}
           dashActive={gameState.activeCheat.dashActive}
           availableCheats={availableCheats}
+          currentAction={selection.currentAction}
         />
 
       </div>

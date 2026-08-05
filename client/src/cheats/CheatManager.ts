@@ -176,14 +176,6 @@ export function executeCheat(
     }
   }
 
-/*
-  console.log(
-    "before:",
-    gameState.whiteTempo,
-    "after cost:",
-    stateAfterCost.whiteTempo
-  );
-*/
   if (
     cheat === "phase" ||
     cheat === "royal-decree" ||

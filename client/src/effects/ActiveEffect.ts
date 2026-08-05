@@ -13,10 +13,10 @@ export type EffectType =
   | "royal-decree"
   | "capture";
 
-
+export type MagnetMode = "push" | "pull";
 
 export type ActiveEffect = {
-  id: number;
+  id: string;
   type: EffectType;
 
   sourceSquare?: string;
@@ -25,6 +25,8 @@ export type ActiveEffect = {
   piece?: Piece;
 
   duration?: number;
-  
+
   status?: boolean;
+
+  magnetMode?: MagnetMode;
 };

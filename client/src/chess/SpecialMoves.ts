@@ -86,11 +86,7 @@ export function getCastleMoves(
 
   const moves: string[] = [];
 
-  /*
-  console.log("king moved?", piece.hasMoved);
-  console.log("king check?", isKingInCheck(piece.color, board, terrain));
-  console.log(board);
-  */
+
   
   if (piece.hasMoved) {
     return moves;

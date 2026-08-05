@@ -232,8 +232,6 @@ export function getValidKingMoves(
   const moves = getOffsetMoves(piece, position, board, terrain, kingOffsets);
 
   if (includeCastling) {
-    //const castleMoves = getCastleMoves(piece, board);
-    //console.log("Castle moves:", castleMoves);
     moves.push(...getCastleMoves(piece, board, terrain));
   }
 

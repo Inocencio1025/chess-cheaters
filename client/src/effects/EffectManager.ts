@@ -10,7 +10,7 @@ export function createEffect(
 ): ActiveEffect {
 
   return {
-    id: Date.now(),
+    id: crypto.randomUUID(),
     type,
     sourceSquare,
     targetSquare,

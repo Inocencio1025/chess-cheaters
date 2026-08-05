@@ -1,0 +1,24 @@
+.tempo-number {
+  color: #facc15;
+
+  text-shadow:
+    0 0 6px rgba(250, 204, 21, .5),
+    0 0 12px rgba(250, 204, 21, .4);
+
+  animation: tempoGlow 1.8s ease-in-out infinite;
+}
+
+
+@keyframes tempoGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 6px rgba(250, 204, 21, .5),
+      0 0 12px rgba(250, 204, 21, .3);
+  }
+
+  50% {
+    text-shadow:
+      0 0 12px rgba(250, 204, 21, .9),
+      0 0 24px rgba(250, 204, 21, .6);
+  }
+}

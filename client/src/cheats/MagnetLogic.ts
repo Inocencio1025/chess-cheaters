@@ -1,6 +1,6 @@
 import type { Board } from "../chess/Board";
 import type { GameState } from "../chess/GameState";
-
+import type { Piece } from "../chess/Piece";
 
 export function getMagnetTargets(
   square: string,
@@ -49,14 +49,19 @@ export function getMagnetTargets(
 
 export function applyMagnet(
   board: Board,
-  terrain: Record<string, "rock"| null>,
+  terrain: Record<string, "rock" | null>,
   casterSquare: string,
   directionSquare: string,
   magnetMode: "pull" | "push"
 ): {
   board: Board;
   terrain: Record<string, "rock" | null>;
-}{
+  movedPieces: {
+    piece: Piece;
+    from: string;
+    to: string;
+  }[];
+} {
 
   const newBoard = { ...board };
   const newTerrain = { ...terrain };
@@ -77,7 +82,11 @@ export function applyMagnet(
 
 
   const pieces: string[] = [];
-
+  const movedPieces: {
+    piece: Piece;
+    from: string;
+    to: string;
+  }[] = [];
 
   // Start one square away from caster
   let file = casterSquare.charCodeAt(0) + dx;
@@ -136,13 +145,20 @@ export function applyMagnet(
       continue;
     }
     if (newBoard[destination]) {
-      //console.log(square, "->", destination, newBoard[destination]);
       continue;
     }
 
 
     if (newTerrain[destination] === "rock") {
       newTerrain[destination] = null;
+    }
+
+    if (newBoard[square]) {
+      movedPieces.push({
+        piece: newBoard[square]!,
+        from: square,
+        to: destination
+      });
     }
 
     newBoard[destination] = newBoard[square];
@@ -152,6 +168,7 @@ export function applyMagnet(
 
   return {
     board: newBoard,
-    terrain: newTerrain
+    terrain: newTerrain,
+    movedPieces
   };
 }

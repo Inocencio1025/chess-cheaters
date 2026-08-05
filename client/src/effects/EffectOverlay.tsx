@@ -11,6 +11,8 @@ import FreezeEffect from "./FreezeEffect";
 import FreezeBreakEffect from "./FreezeBreakEffect";
 import DashEffect from "./DashEffect";
 import ForcePushEffect from "./ForcePushEffect";
+import RockEffect from "./RockEffect";
+import MagnetEffect from "./MagnetEffect";
 
 type Props = {
   effects: ActiveEffect[];
@@ -32,7 +34,8 @@ function EffectOverlay({
       {effects.map(effect => {
 
         const square =
-          effect.type === "gun"
+          effect.type === "gun" ||
+            effect.type === "magnet"
             ? effect.sourceSquare
             : effect.targetSquare ?? effect.sourceSquare;
 
@@ -75,6 +78,16 @@ function EffectOverlay({
             )}
             {effect.type === "force-push" && (
               <ForcePushEffect />
+            )}
+            {effect.type === "rock" && (
+              <RockEffect />
+            )}
+            {effect.type === "magnet" && (
+              <MagnetEffect
+                source={effect.sourceSquare}
+                target={effect.targetSquare}
+                mode={effect.magnetMode}
+              />
             )}
           </div>
         );
