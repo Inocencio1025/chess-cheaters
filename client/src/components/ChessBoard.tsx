@@ -844,6 +844,8 @@ function ChessBoard({ availableCheats }: Props) {
           blackTempo={gameState.blackTempo}
         />
 
+        
+
 
 
         <ActionButtons

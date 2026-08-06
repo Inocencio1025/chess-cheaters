@@ -36,6 +36,7 @@ export function endTurn(
     gameState.royalDecreeActive
   );
 
+  //console.log("Tempo message:", gameState.message);
 
   return {
     ...gameState,

@@ -41,6 +41,8 @@ export interface GameState {
     from: string;
     to: string;
   }[];
+  lastCheckTempoAwardedTo: "white" | "black" | null;
+  openingTempoAwarded: string[];
 }
 
 export function createGameState(): GameState {
@@ -60,7 +62,9 @@ export function createGameState(): GameState {
       phaseActive: false
     },
     tempoMessage: null,
-    message: ""
+    message: "",
+    lastCheckTempoAwardedTo: null,
+    openingTempoAwarded: [],
   };
 }
 
@@ -81,8 +85,9 @@ export function createTestGameState(): GameState {
       phaseActive: false
     },
     tempoMessage: null,
-    message: ""
-
+    message: "",
+    lastCheckTempoAwardedTo: null,
+    openingTempoAwarded: [],
   };
 }
 
