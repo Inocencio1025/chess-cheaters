@@ -7,6 +7,7 @@ import { getMagnetTargets } from "./MagnetLogic";
 import { isKingInCheck } from "../chess/AttackLogic";
 import { endTurn } from "../chess/TurnLogic";
 import { getLegalMoves } from "../chess/MoveLogic";
+import { playSound } from "../sounds/SoundManager";
 
 export const cheats = [
   {
@@ -97,6 +98,7 @@ export function executeCheat(
   switch (cheat) {
 
     case "gun":
+      playSound("gun");
       newState = useGun(
         stateAfterCost,
         targetSquare
@@ -104,6 +106,7 @@ export function executeCheat(
       break;
 
     case "freeze":
+      playSound("freeze");
       newState = useFreeze(
         stateAfterCost,
         targetSquare
@@ -111,6 +114,7 @@ export function executeCheat(
       break;
 
     case "bomb":
+      playSound("bomb");
       newState = useBomb(
         stateAfterCost,
         targetSquare
@@ -118,12 +122,14 @@ export function executeCheat(
       break;
 
     case "royal-decree":
+      playSound("royalDecreeActivation");
       newState = useRoyalDecree(
         stateAfterCost
       );
       break;
 
     case "dash":
+      playSound("dashActivation");
       newState = useDash(
         stateAfterCost,
         casterSquare!
@@ -131,6 +137,7 @@ export function executeCheat(
       break;
 
     case "magnet":
+      playSound("magnet");
       newState = useMagnet(
         stateAfterCost,
         casterSquare!,
@@ -140,6 +147,7 @@ export function executeCheat(
       break;
 
     case "force-push":
+      playSound("forcePush");
       newState = useForcePush(
         stateAfterCost,
         casterSquare!
@@ -147,6 +155,7 @@ export function executeCheat(
       break;
 
     case "rock":
+      playSound("rock");
       newState = useRock(
         stateAfterCost,
         targetSquare
@@ -154,6 +163,7 @@ export function executeCheat(
       break;
 
     case "phase":
+      playSound("phaseActivation");
       newState = usePhase(
         stateAfterCost,
         targetSquare

@@ -1,22 +1,24 @@
 import { useState } from "react";
 import HomeScreen from "./screens/HomeScreen";
-import MatchScreen from "./screens/MatchScreen";
+import MatchLobbyScreen from "./screens/MatchLobbyScreen";
 import CheatSelectScreen from "./screens/CheatSelectScreen";
 import ChessBoard from "./components/ChessBoard";
 import type { CheatType } from "./cheats/CheatManager";
+import GameOverScreen from "./screens/GameOverScreen";
 
 type Screen =
   | "home"
   | "cheat-select"
-  | "match"
-  | "game";
+  | "lobby"
+  | "game"
+  | "game-over";
 
 
 function App() {
 
   const [screen, setScreen] = useState<Screen>("home");
   const [selectedCheats, setSelectedCheats] = useState<CheatType[]>([]);
-
+  const [winner, setWinner] = useState<"white" | "black" | null>(null);
 
   return (
     <>
@@ -30,12 +32,12 @@ function App() {
         <CheatSelectScreen
           onStart={(cheats) => {
             setSelectedCheats(cheats);
-            setScreen("match");
+            setScreen("lobby");
           }}
         />
       )}
-      {screen === "match" && (
-        <MatchScreen
+      {screen === "lobby" && (
+        <MatchLobbyScreen
           onStartGame={() => {
             setScreen("game");
           }}
@@ -45,6 +47,20 @@ function App() {
       {screen === "game" && (
         <ChessBoard
           availableCheats={selectedCheats}
+          onGameOver={(winner) => {
+            setWinner(winner);
+            setScreen("game-over");
+          }}
+        />
+      )}
+
+      {screen === "game-over" && winner && (
+        <GameOverScreen
+          winner={winner}
+          onReturnHome={() => {
+            setWinner(null);
+            setScreen("home");
+          }}
         />
       )}
     </>

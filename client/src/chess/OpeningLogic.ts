@@ -44,30 +44,36 @@ export function getCurrentOpening(
 
     let moveIndex = 0;
 
-    const matches = opening.moves.every(openingMove => {
+    const requirementsMet =
+      !opening.requires ||
+      opening.requires.every(requirement =>
+        moveHistory.some(move => moveToKey(move) === requirement)
+      );
 
-      while (moveIndex < playerMoves.length) {
+    const matches =
+      requirementsMet &&
+      opening.moves.every(openingMove => {
+        while (moveIndex < playerMoves.length) {
 
-        if (playerMoves[moveIndex] === openingMove) {
+          if (playerMoves[moveIndex] === openingMove) {
+            moveIndex++;
+            return true;
+          }
+
           moveIndex++;
-          return true;
         }
 
-        moveIndex++;
-      }
-
-      return false;
-    });
+        return false;
+      });
 
     const lastMoveColor =
-  moveHistory[moveHistory.length - 1].piece.color;
+      moveHistory[moveHistory.length - 1].piece.color;
 
-if (
-  matches &&
-  opening.color === lastMoveColor &&
-  opening.moves.length > longestMatch
-)      
-      {
+    if (
+      matches &&
+      opening.color === lastMoveColor &&
+      opening.moves.length > longestMatch
+    ) {
       bestMatch = {
         name: opening.name,
         type: opening.type,

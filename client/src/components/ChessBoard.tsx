@@ -29,14 +29,18 @@ import rock from "../assets/effects/rock.svg"
 import crown from "../assets/effects/crown.svg"
 import { notationToPosition, positionToPixels } from "../chess/Position";
 import { getLegalMoves } from "../chess/MoveLogic";
-import TempoPopup from "./TempoPopup";
 import TempoDisplay from "./TempoDisplay";
 
 type Props = {
   availableCheats: CheatType[];
+  onGameOver: (winner: "white" | "black") => void;
+
 };
 
-function ChessBoard({ availableCheats }: Props) {
+function ChessBoard({
+  availableCheats,
+  onGameOver
+}: Props) {
   const [autoFlip, setAutoFlip] = useState(false);
   const [magnetMode, setMagnetMode] = useState<"pull" | "push">("pull");
   const [activeEffects, setActiveEffects] = useState<ActiveEffect[]>([]);
@@ -514,14 +518,18 @@ function ChessBoard({ availableCheats }: Props) {
             }));
           }, MESSAGE_HANG_TIME);
         } clearSelection();
-        
+
         setMovingPiece(null);
         setMovingPiecePosition(null);
         setCapturingSquare(null);
 
         // Check for checkmate
         if (finishedState.status === "checkmate") {
-          alert("Checkmate!");
+          onGameOver(
+            finishedState.currentTurn === "white"
+              ? "black"
+              : "white"
+          );
         }
 
 
@@ -844,7 +852,7 @@ function ChessBoard({ availableCheats }: Props) {
           blackTempo={gameState.blackTempo}
         />
 
-        
+
 
 
 

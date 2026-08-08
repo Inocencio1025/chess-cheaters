@@ -1,7 +1,14 @@
 import "./BombEffect.css";
 import explosion from "../assets/effects/explosion.svg";
+import { playSound } from "../sounds/SoundManager";
+import { useEffect } from "react";
 
 function BombEffect() {
+
+  useEffect(() => {
+    playSound("bombExplosion");
+  }, []);
+  
   return (
     <div className="explosion">
       <div className="explosion-flash" />

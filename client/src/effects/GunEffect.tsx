@@ -6,6 +6,7 @@ import {
 import gun from "../assets/effects/gun.svg";
 import "./GunEffect.css";
 import { useEffect, useRef } from "react";
+import { playSound } from "../sounds/SoundManager";
 
 type Props = {
   source?: string;
@@ -50,6 +51,7 @@ function GunEffect({
       }
 
       fired.current = true;
+      playSound("gunfire");
       onFire?.();
 
     }, 600);

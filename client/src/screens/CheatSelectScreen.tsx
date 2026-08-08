@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { cheats, type CheatType } from "../cheats/CheatManager";
 import "./CheatSelectScreen.css";
+import { playSound } from "../sounds/SoundManager";
 
 type Props = {
   onStart: (cheats: CheatType[]) => void;
@@ -111,6 +112,7 @@ function CheatSelectScreen({
                   : "cheat-card"
               }
               onClick={() => {
+                playSound("buttonClick");
                 toggleCheat(cheat.id);
                 setViewingCheat(cheat.id);
               }}
@@ -143,8 +145,10 @@ function CheatSelectScreen({
         <button
           className="primary-button"
           disabled={selectedCheats.length !== 3}
-          onClick={() => onStart(selectedCheats)}
-        >
+          onClick={() => {
+            playSound("buttonClick");
+            onStart(selectedCheats);
+          }}        >
           Start Match
         </button>
 

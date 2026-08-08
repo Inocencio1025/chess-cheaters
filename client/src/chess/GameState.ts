@@ -18,6 +18,13 @@ export type TempoMessage = {
   description?: string;
 };
 
+export type ActiveCheatState = {
+  dashActive: boolean;
+  dashSecondMove: boolean;
+  dashSquare?: string;
+  phaseActive: boolean;
+};
+
 export interface GameState {
   board: Board;
   terrain: Record<string, Terrain | null>;
@@ -43,6 +50,8 @@ export interface GameState {
   }[];
   lastCheckTempoAwardedTo: "white" | "black" | null;
   openingTempoAwarded: string[];
+  capturedWhitePieces: Piece[];
+  capturedBlackPieces: Piece[];
 }
 
 export function createGameState(): GameState {
@@ -65,6 +74,8 @@ export function createGameState(): GameState {
     message: "",
     lastCheckTempoAwardedTo: null,
     openingTempoAwarded: [],
+    capturedWhitePieces: [],
+    capturedBlackPieces: [],
   };
 }
 
@@ -88,12 +99,9 @@ export function createTestGameState(): GameState {
     message: "",
     lastCheckTempoAwardedTo: null,
     openingTempoAwarded: [],
+    capturedWhitePieces: [],
+    capturedBlackPieces: [],
   };
+
 }
 
-export type ActiveCheatState = {
-  dashActive: boolean;
-  dashSecondMove: boolean;
-  dashSquare?: string;
-  phaseActive: boolean;
-};

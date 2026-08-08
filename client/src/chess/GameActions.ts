@@ -3,6 +3,8 @@ import { getGameStatus, movePiece } from "./GameLogic";
 import { endTurn } from "./TurnLogic";
 import { calculateTempoRewards } from "./TempoLogic";
 import { getCurrentOpening } from "./OpeningLogic";
+import { hasUnderdogBonus } from "./MaterialLogic";
+import { playSound } from "../sounds/SoundManager";
 
 
 export function makeMove(
@@ -11,6 +13,8 @@ export function makeMove(
   to: string,
   endPlayerTurn = true
 ): GameState {
+
+  const OPENING_TEMPO_LIMIT = 5;
 
   const result = movePiece(
     gameState.board,
@@ -21,6 +25,26 @@ export function makeMove(
 
   const move = result.move;
 
+
+  const isCastle =
+    move.piece.type === "king" &&
+    Math.abs(
+      Number(from.charCodeAt(0)) -
+      Number(to.charCodeAt(0))
+    ) === 2;
+
+  if (isCastle) {
+    playSound("castle");
+  } else if (move.capturedPiece) {
+    playSound("capture");
+  } else {
+    playSound("move");
+  }
+
+
+  const currentTurnNumber =
+    Math.floor(gameState.moveHistory.length / 2) + 1;
+
   const opening = getCurrentOpening([
     ...gameState.moveHistory,
     move
@@ -28,24 +52,14 @@ export function makeMove(
 
   const openingReward =
     opening &&
+      currentTurnNumber <= OPENING_TEMPO_LIMIT &&
       !gameState.openingTempoAwarded.includes(opening.name)
       ? opening.reward
       : 0;
 
-  const responseBonus =
-    opening &&
-      !gameState.openingTempoAwarded.includes(opening.name) &&
-      opening.responseBonus
-      ? opening.responseBonus
-      : 0;
-
   console.log("Opening:", opening);
-  console.log(
-    "Opening reward:",
-    openingReward,
-    "Response bonus:",
-    responseBonus
-  );
+  console.log("Opening reward:", openingReward);
+
   const statusAfterMove = getGameStatus(
     gameState.currentTurn === "white" ? "black" : "white",
     result.board,
@@ -57,17 +71,34 @@ export function makeMove(
     gameState.royalDecreeActive
   );
 
+  if (statusAfterMove === "checkmate") {
+    playSound("check");
+    playSound("gameWin");
+  } else if (statusAfterMove === "check") {
+    playSound("check");
+  }
+
   const tempoReward = calculateTempoRewards(
     gameState,
     move,
     statusAfterMove === "check"
   );
 
+  const underdog = hasUnderdogBonus(
+    gameState.capturedWhitePieces,
+    gameState.capturedBlackPieces
+  );
+
+  const underdogBonus =
+    underdog === gameState.currentTurn &&
+      (tempoReward.amount + openingReward) > 0
+      ? 1
+      : 0;
+
   const totalTempo =
     tempoReward.amount +
     openingReward +
-    responseBonus;
-
+    underdogBonus;
   console.log(
     "MOVE HISTORY:",
     [
@@ -75,6 +106,10 @@ export function makeMove(
       move
     ].map(move => `${move.from}-${move.to}`)
   );
+
+  if (totalTempo > 0) {
+    playSound("tempoGain");
+  }
 
   const stateAfterMove = {
     ...gameState,
@@ -107,7 +142,8 @@ export function makeMove(
         ? `+${totalTempo} Tempo: ${[
           ...tempoReward.reasons,
           ...(openingReward ? [opening!.name] : []),
-          ...(responseBonus ? ["Response Bonus"] : [])].join(" + ")
+          ...(underdogBonus ? ["Underdog"] : [])
+        ].join(" + ")
         }`
         : "",
 
@@ -116,6 +152,22 @@ export function makeMove(
         tempoReward.reasons.includes("Check")
         ? gameState.currentTurn
         : gameState.lastCheckTempoAwardedTo,
+
+    capturedWhitePieces:
+      move.capturedPiece?.color === "white"
+        ? [
+          ...gameState.capturedWhitePieces,
+          move.capturedPiece
+        ]
+        : gameState.capturedWhitePieces,
+
+    capturedBlackPieces:
+      move.capturedPiece?.color === "black"
+        ? [
+          ...gameState.capturedBlackPieces,
+          move.capturedPiece
+        ]
+        : gameState.capturedBlackPieces,
   };
 
   if (!endPlayerTurn) {

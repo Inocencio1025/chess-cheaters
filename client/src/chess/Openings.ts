@@ -4,6 +4,7 @@ export type Opening = {
   type: "setup" | "opening";
   reward: number;
   color: "white" | "black";
+  requires?: string[];
 };
 
 
@@ -16,7 +17,7 @@ export const openings: Opening[] = [
     ],
     reward: 1,
     color: "white"
-  }, 
+  },
 
   {
     name: "Queen's Pawn Setup",
@@ -45,27 +46,38 @@ export const openings: Opening[] = [
       "C7-C5"
     ],
     reward: 1,
-    color: "black"
+    color: "black",
+    requires: [
+      "E2-E4"
+    ]
   },
 
   {
     name: "French Defense",
     type: "opening",
     moves: [
-      "E7-E6"
+      "E7-E6",
+      "D7-D5"
     ],
-    reward: 1,
-    color: "black"
+    reward: 2,
+    color: "black",
+    requires: [
+      "E2-E4"
+    ]
   },
 
   {
     name: "Caro-Kann Defense",
     type: "opening",
     moves: [
-      "C7-C6"
+      "C7-C6",
+      "D7-D5"
     ],
-    reward: 1,
-    color: "black"
+    reward: 2,
+    color: "black",
+    requires: [
+      "E2-E4"
+    ]
   },
 
   {
@@ -75,7 +87,11 @@ export const openings: Opening[] = [
       "D7-D5"
     ],
     reward: 1,
-    color: "black"
+    color: "black",
+    requires: [
+      "E2-E4"
+    ]
+
   },
 
   {
@@ -85,7 +101,10 @@ export const openings: Opening[] = [
       "D7-D6"
     ],
     reward: 1,
-    color: "black"
+    color: "black",
+    requires: [
+      "E2-E4"
+    ]
   },
 
   {
@@ -156,7 +175,11 @@ export const openings: Opening[] = [
       "F8-B4"
     ],
     reward: 2,
-    color: "black"
+    color: "black",
+    requires: [
+      "D2-D4",
+      "C2-C4"
+    ]
   },
 
   {
@@ -201,6 +224,31 @@ export const openings: Opening[] = [
       "C7-C6"
     ],
     reward: 2,
+    color: "black",
+    requires: [
+      "D2-D4"
+    ]
+  },
+
+  {
+    name: "Central Pawn Setup",
+    type: "setup",
+    moves: [
+      "E7-E5"
+    ],
+    reward: 1,
     color: "black"
-  }
+  },
+
+  {
+    name: "Queen's Pawn Setup",
+    type: "setup",
+    moves: [
+      "D7-D5"
+    ],
+    reward: 1,
+    color: "black"
+  },
+
 ];
+

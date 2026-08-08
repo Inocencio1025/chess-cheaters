@@ -1,3 +1,4 @@
+import { playSound } from "../sounds/SoundManager";
 import "./HomeScreen.css";
 
 type Props = {
@@ -22,8 +23,12 @@ function HomeScreen({
 
         <button
           className="primary-button"
-          onClick={onCreateMatch}
-        >
+          onClick={() => {
+            //playSound("gameStart");
+            playSound("buttonClick");
+
+            onCreateMatch();
+          }}        >
           Create Match
         </button>
 

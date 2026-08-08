@@ -1,10 +1,11 @@
-import "./MatchScreen.css";
+import { playSound } from "../sounds/SoundManager";
+import "./MatchLobbyScreen.css";
 
 type Props = {
   onStartGame: () => void;
 };
 
-function MatchScreen({
+function MatchLobbyScreen({
   onStartGame
 }: Props) {
 
@@ -39,7 +40,12 @@ function MatchScreen({
 
         <button
           className="primary-button"
-          onClick={onStartGame}
+          onClick={
+            () => {
+              playSound("buttonClick");
+              onStartGame();
+            }
+          }
         >
           Start Test Match
         </button>
@@ -50,4 +56,4 @@ function MatchScreen({
   );
 }
 
-export default MatchScreen;
+export default MatchLobbyScreen;

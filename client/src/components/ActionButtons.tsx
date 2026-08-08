@@ -1,5 +1,6 @@
 import { cheats } from "../cheats/CheatManager";
 import type { CheatType } from "../cheats/CheatManager";
+import { playSound } from "../sounds/SoundManager";
 import "./ActionButtons.css";
 
 type Action =
@@ -38,6 +39,7 @@ function ActionButtons({
         <button
           className="action-card"
           onClick={() => {
+            playSound("buttonClick");
             updateTargets("move");
           }}
         >
