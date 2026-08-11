@@ -30,14 +30,19 @@ import crown from "../assets/effects/crown.svg"
 import { notationToPosition, positionToPixels } from "../chess/Position";
 import { getLegalMoves } from "../chess/MoveLogic";
 import TempoDisplay from "./TempoDisplay";
+import A from "../assets/sounds/A.mp3";
+import { sendGameState, onGameStateUpdated } from "../multiplayer/GameConnection";
 
 type Props = {
+  gameId: string | null;
+  playerColor: "white" | "black" | null;
   availableCheats: CheatType[];
   onGameOver: (winner: "white" | "black") => void;
-
 };
 
 function ChessBoard({
+  gameId,
+  playerColor,
   availableCheats,
   onGameOver
 }: Props) {
@@ -56,6 +61,19 @@ function ChessBoard({
   );
 
   useEffect(() => {
+    const handleGameStateUpdated = (newState: GameState) => {
+      setGameState(newState);
+      clearSelection();
+    };
+
+    onGameStateUpdated(handleGameStateUpdated);
+
+    return () => {
+      // We'll clean this listener up properly later.
+    };
+  }, []);
+
+  useEffect(() => {
     if (!gameState.tempoMessage) {
       return;
     }
@@ -70,6 +88,19 @@ function ChessBoard({
     return () => clearTimeout(timer);
 
   }, [gameState.tempoMessage]);
+
+  useEffect(() => {
+    const music = new Audio(A);
+    music.loop = true;
+    music.volume = 0.3;
+
+    music.play().catch(() => { });
+
+    return () => {
+      music.pause();
+      music.currentTime = 0;
+    };
+  }, []);
 
   const [movingPiece, setMovingPiece] = useState<{
     piece: Piece;
@@ -95,7 +126,7 @@ function ChessBoard({
 
   const [capturingSquare, setCapturingSquare] = useState<string | null>(null);
 
-  const flipped = autoFlip && gameState.currentTurn === "black";
+  const flipped = playerColor === "black";
   const [shaking, setShaking] = useState(false);
   const [dashShaking, setDashShaking] = useState(false);
 
@@ -137,7 +168,7 @@ function ChessBoard({
             1500
           );
 
-          setTimeout(() => {
+          setTimeout(async () => {
             const newState = executeSelectedCheat(
               gameState,
               "gun",
@@ -147,7 +178,7 @@ function ChessBoard({
             );
 
             if (newState) {
-              setGameState(newState);
+              await applyNewGameState(newState);
               clearSelection();
             }
 
@@ -167,6 +198,7 @@ function ChessBoard({
           );
         }
 
+
         if (selection.currentAction === "dash") {
           const newState = executeCheat(
             "dash",
@@ -176,7 +208,7 @@ function ChessBoard({
             magnetMode
           );
 
-          setGameState(newState);
+          applyNewGameState(newState);
 
           setSelection({
             selectedSquare: squareName,
@@ -222,7 +254,9 @@ function ChessBoard({
 
               (newState.pushedPieces ?? []).forEach((p) => {
                 startPositions[p.from] = positionToPixels(
-                  notationToPosition(p.from)
+                  notationToPosition(p.from),
+                  80,
+                  flipped
                 );
               });
 
@@ -234,7 +268,9 @@ function ChessBoard({
 
                 (newState.pushedPieces ?? []).forEach((p) => {
                   endPositions[p.from] = positionToPixels(
-                    notationToPosition(p.to)
+                    notationToPosition(p.to),
+                    80,
+                    flipped
                   );
                 });
 
@@ -242,8 +278,8 @@ function ChessBoard({
 
               }, 20);
 
-              setTimeout(() => {
-                setGameState(newState);
+              setTimeout(async () => {
+                await applyNewGameState(newState);
                 clearSelection();
               }, 200);
 
@@ -290,7 +326,9 @@ function ChessBoard({
 
               (newState.movedPieces ?? []).forEach((p) => {
                 startPositions[p.from] = positionToPixels(
-                  notationToPosition(p.from)
+                  notationToPosition(p.from),
+                  80,
+                  flipped
                 );
               });
 
@@ -302,7 +340,9 @@ function ChessBoard({
 
                 (newState.movedPieces ?? []).forEach((p) => {
                   endPositions[p.from] = positionToPixels(
-                    notationToPosition(p.to)
+                    notationToPosition(p.to),
+                    80,
+                    flipped
                   );
                 });
 
@@ -311,8 +351,8 @@ function ChessBoard({
               }, 20);
 
 
-              setTimeout(() => {
-                setGameState(newState);
+              setTimeout(async () => {
+                await applyNewGameState(newState);
                 clearSelection();
               }, 200);
 
@@ -340,7 +380,7 @@ function ChessBoard({
             500
           );
 
-          setTimeout(() => {
+          setTimeout(async () => {
 
             const newState = executeSelectedCheat(
               gameState,
@@ -351,7 +391,7 @@ function ChessBoard({
             );
 
             if (newState) {
-              setGameState(newState);
+              await applyNewGameState(newState);
               clearSelection();
             }
 
@@ -368,7 +408,7 @@ function ChessBoard({
         );
 
         if (newState) {
-          setGameState(newState);
+          applyNewGameState(newState);
           clearSelection();
         }
 
@@ -393,14 +433,18 @@ function ChessBoard({
 
         setMovingPiecePosition(
           positionToPixels(
-            notationToPosition(selection.selectedSquare)
+            notationToPosition(selection.selectedSquare),
+            80,
+            flipped
           )
         );
 
         setTimeout(() => {
           setMovingPiecePosition(
             positionToPixels(
-              notationToPosition(squareName)
+              notationToPosition(squareName),
+              80,
+              flipped
             )
           );
         }, 10);
@@ -432,7 +476,7 @@ function ChessBoard({
           );
         }
       }
-      setTimeout(() => {
+      setTimeout(async () => {
 
         const moveResult = moveSelectedPiece(
           stateToMove,
@@ -506,9 +550,14 @@ function ChessBoard({
 
         // Normal ending
         const finishedState = finishMove(newState);
+
         setGameState({
           ...finishedState,
         });
+
+        if (gameId) {
+          await sendGameState(gameId, finishedState);
+        }
 
         if (finishedState.message) {
           setTimeout(() => {
@@ -543,6 +592,14 @@ function ChessBoard({
 
 
     // Selecting piece
+
+    const clickedPiece = gameState.board[squareName];
+
+    if (clickedPiece && clickedPiece.color !== playerColor) {
+      clearSelection();
+      return;
+    }
+
     const result = selectPiece(gameState, squareName);
 
     if (result) {
@@ -613,7 +670,7 @@ function ChessBoard({
       );
 
       if (newState) {
-        setGameState(newState);
+        applyNewGameState(newState);
         clearSelection();
       }
 
@@ -626,8 +683,6 @@ function ChessBoard({
       gameState,
       selection.selectedSquare
     );
-
-    setGameState(result.gameState);
 
     setSelection({
       selectedSquare: action === "rock"
@@ -673,20 +728,21 @@ function ChessBoard({
       }));
     }, 700);
   }
-
-  function showTempoMessage(message: string) {
-    setGameState(prev => ({
-      ...prev,
-      message
-    }));
-
-    setTimeout(() => {
+  /*
+    function showTempoMessage(message: string) {
       setGameState(prev => ({
         ...prev,
-        message: ""
+        message
       }));
-    }, 3000);
-  }
+  
+      setTimeout(() => {
+        setGameState(prev => ({
+          ...prev,
+          message: ""
+        }));
+      }, 3000);
+    }
+      */
 
   function triggerShake() {
     setShaking(true);
@@ -694,6 +750,14 @@ function ChessBoard({
     setTimeout(() => {
       setShaking(false);
     }, 150);
+  }
+
+  async function applyNewGameState(newState: GameState) {
+    setGameState(newState);
+
+    if (gameId) {
+      await sendGameState(gameId, newState);
+    }
   }
 
   return (
@@ -843,6 +907,7 @@ function ChessBoard({
             effects={activeEffects}
             playEffect={playEffect}
             fireGun={fireGun}
+            flipped={flipped}
           />
 
         </div>
@@ -864,6 +929,8 @@ function ChessBoard({
           dashActive={gameState.activeCheat.dashActive}
           availableCheats={availableCheats}
           currentAction={selection.currentAction}
+          currentTurn={gameState.currentTurn}
+          playerColor={playerColor}
         />
 
       </div>

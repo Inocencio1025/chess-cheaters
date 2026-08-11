@@ -12,13 +12,14 @@ type Props = {
   source?: string;
   target?: string;
   onFire?: () => void;
+  flipped: boolean;
 };
-
 
 function GunEffect({
   source,
   target,
-  onFire
+  onFire,
+  flipped
 }: Props) {
 
   const fired = useRef(false);
@@ -27,20 +28,39 @@ function GunEffect({
     return null;
   }
 
-  const angle = getAngle(source, target);
+  const angle = getAngle(source, target, flipped);
   const facingLeft = angle > 90 || angle < -90;
+
   const start = notationToPosition(source);
   const end = notationToPosition(target);
 
-  const dx = end.file - start.file;
-  const dy = end.rank - start.rank;
+  // Use the actual displayed board coordinates
+  const startPixels = positionToPixels(
+    start,
+    80,
+    flipped
+  );
+
+  const endPixels = positionToPixels(
+    end,
+    80,
+    flipped
+  );
+
+  const dx =
+    parseFloat(endPixels.left) -
+    parseFloat(startPixels.left);
+
+  const dy =
+    parseFloat(endPixels.top) -
+    parseFloat(startPixels.top);
 
   const distance = Math.sqrt(dx * dx + dy * dy);
 
   const gunOffset = 30;
 
   const offsetX = (dx / distance) * gunOffset;
-  const offsetY = -(dy / distance) * gunOffset;
+  const offsetY = (dy / distance) * gunOffset;
 
   useEffect(() => {
 
@@ -51,6 +71,7 @@ function GunEffect({
       }
 
       fired.current = true;
+
       playSound("gunfire");
       onFire?.();
 
@@ -79,25 +100,40 @@ function GunEffect({
         />
 
         <div className="muzzle-flash" />
+
       </div>
 
     </div>
   );
 }
 
-
 function getAngle(
   source: string,
-  target: string
+  target: string,
+  flipped: boolean
 ) {
-  const start = positionToPixels(notationToPosition(source));
-  const end = positionToPixels(notationToPosition(target));
 
-  const dx = parseFloat(end.left) - parseFloat(start.left);
-  const dy = parseFloat(end.top) - parseFloat(start.top);
+  const start = positionToPixels(
+    notationToPosition(source),
+    80,
+    flipped
+  );
+
+  const end = positionToPixels(
+    notationToPosition(target),
+    80,
+    flipped
+  );
+
+  const dx =
+    parseFloat(end.left) -
+    parseFloat(start.left);
+
+  const dy =
+    parseFloat(end.top) -
+    parseFloat(start.top);
 
   return Math.atan2(dy, dx) * (180 / Math.PI);
 }
-
 
 export default GunEffect;

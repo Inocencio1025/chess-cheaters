@@ -11,13 +11,15 @@ type Props = {
   source?: string;
   target?: string;
   mode?: "push" | "pull";
+  flipped: boolean;
 };
 
 
 function MagnetEffect({
   source,
   target,
-  mode = "push"
+  mode = "push",
+  flipped
 }: Props) {
 
   if (!source || !target) {
@@ -25,7 +27,7 @@ function MagnetEffect({
   }
 
 
-  const angle = getAngle(source, target);
+  const angle = getAngle(source, target, flipped);
 
   const offset = 40;
 
@@ -74,34 +76,27 @@ function MagnetEffect({
 }
 
 
-
 function getAngle(
   source: string,
-  target: string
+  target: string,
+  flipped: boolean
 ) {
-
   const start = positionToPixels(
-    notationToPosition(source)
+    notationToPosition(source),
+    80,
+    flipped
   );
 
   const end = positionToPixels(
-    notationToPosition(target)
+    notationToPosition(target),
+    80,
+    flipped
   );
 
+  const dx = parseFloat(end.left) - parseFloat(start.left);
+  const dy = parseFloat(end.top) - parseFloat(start.top);
 
-  const dx =
-    parseFloat(end.left) -
-    parseFloat(start.left);
-
-
-  const dy =
-    parseFloat(end.top) -
-    parseFloat(start.top);
-
-
-  return Math.atan2(dy, dx) *
-    (180 / Math.PI);
-
+  return Math.atan2(dy, dx) * (180 / Math.PI);
 }
 
 

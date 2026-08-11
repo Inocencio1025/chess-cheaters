@@ -16,6 +16,8 @@ type Props = {
   dashActive: boolean;
   availableCheats: CheatType[];
   currentAction: Action;
+  currentTurn: "white" | "black";
+  playerColor: "white" | "black" | null;
 };
 
 
@@ -26,8 +28,12 @@ function ActionButtons({
   setMagnetMode,
   dashActive,
   availableCheats,
-  currentAction
+  currentAction,
+  currentTurn,
+  playerColor
 }: Props) {
+
+  const isMyTurn = currentTurn === playerColor;
 
   return (
     <div className="action-panel">
@@ -38,6 +44,7 @@ function ActionButtons({
 
         <button
           className="action-card"
+          disabled={!isMyTurn}
           onClick={() => {
             playSound("buttonClick");
             updateTargets("move");
@@ -52,8 +59,9 @@ function ActionButtons({
             <button
               className="action-card"
               key={cheat.id}
-              disabled={!canAfford(cheat.id) || dashActive}
+              disabled={!isMyTurn || !canAfford(cheat.id) || dashActive}
               onClick={() => {
+                playSound("buttonClick");
                 updateTargets(cheat.id);
               }}
             >

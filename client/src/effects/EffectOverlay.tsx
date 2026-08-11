@@ -18,6 +18,7 @@ type Props = {
   effects: ActiveEffect[];
   playEffect: (effect: ActiveEffect, duration?: number) => void;
   fireGun: (effect: ActiveEffect) => void;
+  flipped: boolean;
 };
 
 
@@ -26,7 +27,8 @@ type Props = {
 function EffectOverlay({
   effects,
   playEffect,
-  fireGun
+  fireGun,
+  flipped
 }: Props) {
 
   return (
@@ -47,7 +49,9 @@ function EffectOverlay({
             className="effect"
             style={
               positionToPixels(
-                notationToPosition(square)
+                notationToPosition(square),
+                80,
+                flipped
               )
             }
           >
@@ -57,6 +61,7 @@ function EffectOverlay({
                 source={effect.sourceSquare}
                 target={effect.targetSquare}
                 onFire={() => fireGun(effect)}
+                flipped={flipped}
               />
             )}
 
@@ -87,6 +92,7 @@ function EffectOverlay({
                 source={effect.sourceSquare}
                 target={effect.targetSquare}
                 mode={effect.magnetMode}
+                flipped={flipped}
               />
             )}
           </div>

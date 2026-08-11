@@ -1,13 +1,18 @@
+import { useState } from "react";
 import { playSound } from "../sounds/SoundManager";
 import "./MatchLobbyScreen.css";
 
 type Props = {
+  gameLink: string | null;
   onStartGame: () => void;
 };
 
 function MatchLobbyScreen({
+  gameLink,
   onStartGame
 }: Props) {
+
+  const [copied, setCopied] = useState(false);
 
   return (
     <div className="match-screen">
@@ -21,34 +26,28 @@ function MatchLobbyScreen({
         </p>
 
         <div className="match-link">
-          chesscheaters.com/join/ABC123
+          {gameLink}
         </div>
 
         <button
           className="copy-button"
-          onClick={() => navigator.clipboard.writeText(
-            "chesscheaters.com/join/ABC123"
-          )}
+          onClick={async () => {
+            if (gameLink) {
+              await navigator.clipboard.writeText(gameLink);
+              setCopied(true);
+
+              setTimeout(() => {
+                setCopied(false);
+              }, 1500);
+            }
+          }}
         >
-          Copy Link
+          {copied ? "Copied!" : "Copy Link"}
         </button>
 
         <p>
           Waiting for opponent...
         </p>
-
-
-        <button
-          className="primary-button"
-          onClick={
-            () => {
-              playSound("buttonClick");
-              onStartGame();
-            }
-          }
-        >
-          Start Test Match
-        </button>
 
       </div>
 

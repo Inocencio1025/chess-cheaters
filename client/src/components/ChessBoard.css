@@ -264,6 +264,7 @@
 
 .bomb-attached {
   position: absolute;
+  z-index: 5;
 
   left: 50%;
   top: 50%;
@@ -354,6 +355,7 @@
 
 .ice-overlay {
   position: absolute;
+  z-index: 3;
 
   width: 90%;
   height: 90%;

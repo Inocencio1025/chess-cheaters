@@ -2,7 +2,7 @@ import { playSound } from "../sounds/SoundManager";
 import "./HomeScreen.css";
 
 type Props = {
-  onCreateMatch: () => void;
+  onCreateMatch: () => void | Promise<void>;
 };
 
 function HomeScreen({

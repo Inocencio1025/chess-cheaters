@@ -1,6 +1,6 @@
 export type Position = {
-  file: number; // 0-7 (A-H)
-  rank: number; // 0-7 (1-8)
+  file: number;
+  rank: number;
 };
 
 export function notationToPosition(square: string): Position {
@@ -18,10 +18,14 @@ export function positionToNotation(position: Position): string {
 
 export function positionToPixels(
   position: Position,
-  squareSize = 80
+  squareSize = 80,
+  flipped = false
 ) {
+  const file = flipped ? 7 - position.file : position.file;
+  const rank = flipped ? position.rank : 7 - position.rank;
+
   return {
-    left: `${position.file * squareSize + squareSize / 2}px`,
-    top: `${(7 - position.rank) * squareSize + squareSize / 2}px`
+    left: `${file * squareSize + squareSize / 2}px`,
+    top: `${rank * squareSize + squareSize / 2}px`
   };
 }
