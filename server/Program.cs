@@ -2,7 +2,7 @@ using server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var clientUrl = "https://chess-cheaters-5smdiblgs-inocencio1025s-projects.vercel.app";
+var clientUrl = "https://chess-cheaters-indol.vercel.app";
 
 builder.Services.AddSignalR();
 
