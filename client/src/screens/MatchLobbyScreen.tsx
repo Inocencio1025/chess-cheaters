@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { playSound } from "../sounds/SoundManager";
 import "./MatchLobbyScreen.css";
 
 type Props = {
@@ -8,8 +7,7 @@ type Props = {
 };
 
 function MatchLobbyScreen({
-  gameLink,
-  onStartGame
+  gameLink
 }: Props) {
 
   const [copied, setCopied] = useState(false);

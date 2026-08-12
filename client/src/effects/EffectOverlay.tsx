@@ -26,7 +26,6 @@ type Props = {
 
 function EffectOverlay({
   effects,
-  playEffect,
   fireGun,
   flipped
 }: Props) {

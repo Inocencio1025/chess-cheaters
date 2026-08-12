@@ -1,10 +1,8 @@
 import type { Board } from "../chess/Board";
-import type { GameState } from "../chess/GameState";
 import type { Piece } from "../chess/Piece";
 
 export function getMagnetTargets(
   square: string,
-  gameState: GameState
 ): string[] {
 
   const file = square.charCodeAt(0);

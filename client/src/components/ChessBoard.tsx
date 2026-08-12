@@ -1,6 +1,7 @@
 import "./ChessBoard.css";
 import { useState, useEffect } from "react";
-import { createGameState, createTestGameState } from "../chess/GameState";
+import { createGameState } from "../chess/GameState";
+// createTestGameState
 import type { GameState } from "../chess/GameState";
 import { files, ranks } from "../chess/BoardConstants";
 import { executeCheat, type CheatType } from "../cheats/CheatManager";
@@ -130,7 +131,6 @@ function ChessBoard({
 
   const flipped = playerColor === "black";
   const [shaking, setShaking] = useState(false);
-  const [dashShaking, setDashShaking] = useState(false);
 
   const GUN_FIRE_DELAY = 700;
   const CAPTURE_ANIMATION_TIME = 600;
@@ -517,12 +517,6 @@ function ChessBoard({
 
 
         if (dashResult) {
-
-          setDashShaking(true);
-
-          setTimeout(() => {
-            setDashShaking(false);
-          }, 300);
 
           if (dashResult.finished) {
             setGameState(dashResult.state);

@@ -257,8 +257,7 @@ export function getCheatTargets(
 
     case "magnet":
       return getMagnetTargets(
-        square,
-        gameState
+        square
       );
 
     case "phase":

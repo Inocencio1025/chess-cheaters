@@ -15,7 +15,6 @@ type Props = {
 function GameInfo({
   currentTurn,
   status,
-  currentAction,
   message
 }: Props) {
 

@@ -2,7 +2,7 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import type { GameState } from "../chess/GameState";
 
 export const gameConnection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5215/game")
+  .withUrl("https://chess-cheaters-server.onrender.com/game")
   .withAutomaticReconnect()
   .build();
 

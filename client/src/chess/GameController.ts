@@ -1,6 +1,6 @@
 import type { GameState } from "./GameState";
 import { getLegalMoves } from "./MoveLogic";
-import { getCheatCost, executeCheat, getCheatTargets, prepareCheat, type CheatType as CheatType } from "../cheats/CheatManager";
+import { getCheatCost, executeCheat, getCheatTargets, type CheatType as CheatType } from "../cheats/CheatManager";
 import { makeMove } from "./GameActions";
 import { endTurn } from "./TurnLogic";
 import { files, ranks } from "./BoardConstants";

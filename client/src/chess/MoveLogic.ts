@@ -14,7 +14,7 @@ export function getLegalMoves(
   terrain: Record<string, "rock" | null>,
   moveHistory: Move[],
   royalDecreeActive: boolean,
-  cannotCapture = false
+  cannotCapture: boolean = false
 ): string[] {
 
   const pseudoMoves = getPseudoLegalMoves(
@@ -23,8 +23,7 @@ export function getLegalMoves(
     board,
     terrain,
     moveHistory,
-    royalDecreeActive,
-    cannotCapture
+    royalDecreeActive
   );
 
 
@@ -55,8 +54,7 @@ export function getPseudoLegalMoves(
   board: Board,
   terrain: Record<string, "rock" | null>,
   moveHistory: Move[],
-  royalDecreeActive: boolean,
-  cannotCapture = false
+  royalDecreeActive: boolean
 ): string[] {
 
   const position = notationToPosition(square);

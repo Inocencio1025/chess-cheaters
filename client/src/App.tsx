@@ -32,7 +32,6 @@ function App() {
   ); const [selectedCheats, setSelectedCheats] = useState<CheatType[]>([]);
   const [winner, setWinner] = useState<"white" | "black" | null>(null);
   const [gameLink, setGameLink] = useState<string | null>(null);
-  const [isHost, setIsHost] = useState(false);
   const [gameId, setGameId] = useState<string | null>(
     window.location.pathname.split("/")[2] ?? null
   );
@@ -77,7 +76,6 @@ function App() {
       {screen === "home" && (
         <HomeScreen
           onCreateMatch={async () => {
-            setIsHost(true);
 
             const link = await createGame();
             const id = link.split("/").pop()!;
