@@ -30,7 +30,7 @@ import crown from "../assets/effects/crown.svg"
 import { notationToPosition, positionToPixels } from "../chess/Position";
 import { getLegalMoves } from "../chess/MoveLogic";
 import TempoDisplay from "./TempoDisplay";
-import A from "../assets/sounds/A.mp3";
+//import A from "../assets/sounds/A.mp3";
 import { sendGameState, onGameStateUpdated } from "../multiplayer/GameConnection";
 
 type Props = {
@@ -89,6 +89,7 @@ function ChessBoard({
 
   }, [gameState.tempoMessage]);
 
+  /* background music 
   useEffect(() => {
     const music = new Audio(A);
     music.loop = true;
@@ -101,6 +102,7 @@ function ChessBoard({
       music.currentTime = 0;
     };
   }, []);
+  */
 
   const [movingPiece, setMovingPiece] = useState<{
     piece: Piece;
