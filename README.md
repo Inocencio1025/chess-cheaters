@@ -8,7 +8,7 @@ No download or account required. Create a match, share the generated link with a
 
 ## About
 
-Chess Cheaters is a real-time multiplayer arcade chess game where players compete in traditional chess while using unique cheats and abilities to disrupt the game.
+Chess Cheaters is a multiplayer arcade chess game where players compete in traditional chess while using unique cheats and abilities to disrupt the game.
 
 The project was built from the ground up with a custom chess engine, multiplayer synchronization, and custom gameplay mechanics.
 
