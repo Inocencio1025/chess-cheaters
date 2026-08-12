@@ -25,6 +25,8 @@ var app = builder.Build();
 
 app.UseCors("Client");
 
+app.MapGet("/", () => "Chess Cheaters Server is running!");
+
 app.MapHub<GameHub>("/game");
 
 app.Run();
