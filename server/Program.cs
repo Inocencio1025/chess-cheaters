@@ -19,6 +19,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("Client");
+app.UseCors("ChessClient");
 
 app.MapHub<GameHub>("/game");
 app.Run();
