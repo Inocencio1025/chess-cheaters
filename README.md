@@ -74,21 +74,19 @@ Players earn Tempo by making progress during the game and can spend it to activa
 ## 📸 Screenshots
 
 ### Home Screen
-![Home Screen](<img width="1920" height="916" alt="Screenshot (661)" src="https://github.com/user-attachments/assets/858b8380-e2bf-41d2-858d-bb719a71b0d6" />)
+![Home Screen](https://github.com/user-attachments/assets/858b8380-e2bf-41d2-858d-bb719a71b0d6)
 
 ### Cheat Selection
-![Cheat Selection](<img width="1920" height="913" alt="Screenshot (662)" src="https://github.com/user-attachments/assets/b56f0312-62d3-430e-b0d4-6481944207a8" />
-)
+![Cheat Selection](https://github.com/user-attachments/assets/b56f0312-62d3-430e-b0d4-6481944207a8)
 
 ### Match Lobby
-![Match Lobby](<img width="783" height="575" alt="Screenshot (663)" src="https://github.com/user-attachments/assets/ba1aa3b9-85f9-41e6-8b30-060bef01d48c" />
-)
+![Match Lobby](https://github.com/user-attachments/assets/ba1aa3b9-85f9-41e6-8b30-060bef01d48c)
 
 ### Gameplay
-![Gameplay](<img width="828" height="927" alt="Screenshot (664)" src="https://github.com/user-attachments/assets/289d1742-dee0-440d-aa38-32b9cda1f442" />
-)
-![Gun Cheat](<img width="286" height="233" alt="Screenshot (665)" src="https://github.com/user-attachments/assets/1ae68ed6-b0be-4a8b-9694-c6ba3aee8919" />
-)
+![Gameplay](https://github.com/user-attachments/assets/289d1742-dee0-440d-aa38-32b9cda1f442)
+
+### Gun Cheat
+![Gun Cheat](https://github.com/user-attachments/assets/1ae68ed6-b0be-4a8b-9694-c6ba3aee8919)
 
 
 ## Running Locally
