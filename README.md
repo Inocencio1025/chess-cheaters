@@ -4,6 +4,8 @@
 
 [Play Chess Cheaters](https://chess-cheaters-indol.vercel.app)
 
+No download or account required. Create a match, share the generated link with a friend, and start playing.
+
 ## About
 
 Chess Cheaters is a real-time multiplayer arcade chess game where players compete in traditional chess while using unique cheats and abilities to disrupt the game.
@@ -12,7 +14,9 @@ The project was built from the ground up with a custom chess engine, multiplayer
 
 ## Features
 
-- Real-time online multiplayer
+- No account or sign-up required
+- Create a match and share the link with a friend
+- Play directly in the browser with no download required
 - Custom chess engine and game rules
 - 9 unique cheats with different abilities
 - Tempo system for earning and spending cheats
