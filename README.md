@@ -74,8 +74,7 @@ Players earn Tempo by making progress during the game and can spend it to activa
 ## 📸 Screenshots
 
 ### Home Screen
-![Home Screen](<img width="1920" height="916" alt="Screenshot (661)" src="https://github.com/user-attachments/assets/858b8380-e2bf-41d2-858d-bb719a71b0d6" />
-)
+![Home Screen](<img width="1920" height="916" alt="Screenshot (661)" src="https://github.com/user-attachments/assets/858b8380-e2bf-41d2-858d-bb719a71b0d6" />)
 
 ### Cheat Selection
 ![Cheat Selection](<img width="1920" height="913" alt="Screenshot (662)" src="https://github.com/user-attachments/assets/b56f0312-62d3-430e-b0d4-6481944207a8" />
@@ -131,5 +130,5 @@ dotnet run
 
 Rolando Inocencio
 
-- GitHub: [YOUR_GITHUB_USERNAME](https://github.com/Inocencio1025/chess-cheaters)
+- GitHub: [Inocencio1025](https://github.com/Inocencio1025/chess-cheaters)
 - Live Demo: [Chess Cheaters](https://chess-cheaters-indol.vercel.app)
